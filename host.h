@@ -17,6 +17,7 @@ typedef struct { /* State of host */
    LinkInfo link_out;          /* Outgoing communication link */
 } hostState;
 
+
 void hostMain(hostState * hstate);
 
 void hostInit(hostState * hstate, int physid);

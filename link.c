@@ -57,12 +57,12 @@
 /* Closes a link */
 int linkClear(LinkInfo * link)
 {
-int flag;
+	int flag;
 
-if (link->linkType == UNIPIPE) {
-   close(link->uniPipeInfo.pipe_filedes[0]);
-   close(link->uniPipeInfo.pipe_filedes[1]);
-}
+	if (link->linkType == UNIPIPE) {
+	   close(link->uniPipeInfo.pipe_filedes[0]);
+	   close(link->uniPipeInfo.pipe_filedes[1]);
+	}
 }
 
 /* Initializes a link */
