@@ -7,24 +7,24 @@
 main() 
 {
 
-packetBuffer pb1, pb2, pb3;
-LinkInfo link;
+	packetBuffer pb1, pb2, pb3;
+	LinkInfo link;
 
 
-link.linkType = UNIPIPE;
-link.linkID = 0;
-link.uniPipeInfo.pipeType=NONBLOCKING;
-linkCreate(&link);
+	link.linkType = UNIPIPE;
+	link.linkID = 0;
+	link.uniPipeInfo.pipeType=NONBLOCKING;
+	linkCreate(&link);
 
-pb1.valid = 1;
-pb1.length=10;
-pb1.srcaddr=123;
-pb1.dstaddr=456;
-strcpy(pb1.payload, "Okay, here we go");
+	pb1.is_valid = 1;
+	pb1.length=10;
+	pb1.src_addr=123;
+	pb1.dest_addr=456;
+	strcpy(pb1.payload, "Okay, here we go");
 
-linkSend(&link, &pb1);
-linkReceive(&link, &pb2);
-linkReceive(&link, &pb3);
+	linkSend(&link, &pb1);
+	linkReceive(&link, &pb2);
+	linkReceive(&link, &pb3);
 
 }
 

@@ -31,7 +31,7 @@ return newnumber;
 /***************************** 
  * Main loop of the manager  *
  *****************************/
-void manMain(manLinkArrayType * manLinkArray)
+void managerMain(manLinkArrayType * manLinkArray)
 {
 int currhost;      /* The current host the manager is connected to */
 char cmd;          /* Command entered by user */
@@ -43,32 +43,32 @@ while(1) {
    cmd = manGetUserCommand(currhost);
    if (cmd == 'q') return;
    else if (cmd == 'd') {
-      manGetHostState(&(manLinkArray->link[currhost]));
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manGetHostState(&(manLinkArray->links[currhost]));
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    } 
    else if (cmd == 's') {
-      manSetNetAddr(&(manLinkArray->link[currhost]));
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manSetNetAddr(&(manLinkArray->links[currhost]));
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    } 
    else if (cmd == 'm') { 
-      manSetMainDir(&(manLinkArray->link[currhost]));
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manSetMainDir(&(manLinkArray->links[currhost]));
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 'f') {
-      manClearRcvFlg(&(manLinkArray->link[currhost]));
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manClearRcvFlg(&(manLinkArray->links[currhost]));
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 'r') {
-      manDownloadPacket(&(manLinkArray->link[currhost])); 
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manDownloadPacket(&(manLinkArray->links[currhost])); 
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 'u') {
-      manUploadPacket(&(manLinkArray->link[currhost])); 
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manUploadPacket(&(manLinkArray->links[currhost])); 
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 't') {
-      k = manTransmitPacket(&(manLinkArray->link[currhost]));
-      if (k==0) manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      k = manTransmitPacket(&(manLinkArray->links[currhost]));
+      if (k==0) manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 'h') 
       manDisplayHosts(currhost, manLinkArray->numlinks);

@@ -11,9 +11,9 @@ enum UniPipeType {BLOCKING, NONBLOCKING};
 
 typedef struct {
    enum UniPipeType pipeType;
-   int         fd[2];
-   int         physIdSrc;
-   int	       physIdDst;
+   int         pipe_filedes[2];
+   int         src_physId;
+   int	       dest_physId;
 } UniPipeInfo;
 
 typedef struct {  /* Has all the information to implement a link */

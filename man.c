@@ -23,8 +23,8 @@
 #define EMPTY_ADDR  10000  /* Indicates that the empty address */
                              /* It also indicates that the broadcast address */
 #define MAXBUFFER 1000
-#define PIPEWRITE 1 
-#define PIPEREAD  0
+#define PIPE_WRITE 1 
+#define PIPE_READ  0
 #define TENMILLISEC 10000
 
 /* Get a command from the user */
@@ -90,7 +90,7 @@ int manReplyReceive(managerLink * manLink, char reply[])
 {
 int n;
 
-n = read(manLink->fromHost[PIPEREAD],reply,250);
+n = read(manLink->fromHost[PIPE_READ],reply,250);
 reply[n] = '\0';
 return n+1;
 }
@@ -101,7 +101,7 @@ return n+1;
 void manCommandSend(managerLink * manLink, char command[])
 {
 int i;
-i = write(manLink->toHost[PIPEWRITE],command,strlen(command));
+i = write(manLink->toHost[PIPE_WRITE],command,strlen(command));
 }
 
 /*
@@ -445,7 +445,7 @@ return newnumber;
 /***************************** 
  * Main loop of the manager  *
  *****************************/
-void manMain(manLinkArrayType * manLinkArray)
+void managerMain(manLinkArrayType * manLinkArray)
 {
 int currhost;      /* The current host the manager is connected to */
 char cmd;          /* Command entered by user */
@@ -460,32 +460,32 @@ while(1) {
    /* Execute the command */
    if (cmd == 'q') return;
    else if (cmd == 'd') {
-      manGetHostState(&(manLinkArray->link[currhost]));
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manGetHostState(&(manLinkArray->links[currhost]));
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    } 
    else if (cmd == 's') {
-      manSetNetAddr(&(manLinkArray->link[currhost]));
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manSetNetAddr(&(manLinkArray->links[currhost]));
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    } 
    else if (cmd == 'm') { 
-      manSetMainDir(&(manLinkArray->link[currhost]));
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manSetMainDir(&(manLinkArray->links[currhost]));
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 'f') {
-      manClearRcvFlg(&(manLinkArray->link[currhost]));
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manClearRcvFlg(&(manLinkArray->links[currhost]));
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 'r') {
-      manDownloadPacket(&(manLinkArray->link[currhost])); 
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manDownloadPacket(&(manLinkArray->links[currhost])); 
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 'u') {
-      manUploadPacket(&(manLinkArray->link[currhost])); 
-      manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      manUploadPacket(&(manLinkArray->links[currhost])); 
+      manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 't') {
-      k = manTransmitPacket(&(manLinkArray->link[currhost]));
-      if (k==0) manWaitForReply(&(manLinkArray->link[currhost]), cmd);
+      k = manTransmitPacket(&(manLinkArray->links[currhost]));
+      if (k==0) manWaitForReply(&(manLinkArray->links[currhost]), cmd);
    }
    else if (cmd == 'h') 
       manDisplayHosts(currhost, manLinkArray->numlinks);

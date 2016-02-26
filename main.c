@@ -17,106 +17,105 @@
 #define EMPTY_ADDR  0xffff  /* Indicates the empty address */
                              /* It also indicates that the broadcast address */
 #define MAXBUFFER 1000
-#define PIPEWRITE 1 
-#define PIPEREAD  0
+#define PIPE_WRITE 1 
+#define PIPE_READ  0
 
 void main()
 {
-hostState hstate;             /* The host's state */
-linkArrayType linkArray;
-manLinkArrayType manLinkArray;
+	hostState host_state;             /* The host's state */
+	linkArrayType links_array;
+	manLinkArrayType manager_links_array;
 
-pid_t pid;  /* Process id */
-int physid; /* Physical ID of host */
-int i;
-int k;
+	pid_t process_id;  /* Process id */
+	int host_physid; /* Physical ID of host */
+	int i;
 
-/* 
- * Create nonblocking (pipes) between manager and hosts 
- * assuming that hosts have physical IDs 0, 1, ... 
- */
-manLinkArray.numlinks = NUMHOSTS;
-netCreateConnections(& manLinkArray);
+	/*
+	 * Create nonblocking (pipes) between manager and hosts
+	 * assuming that hosts have physical IDs 0, 1, ... (that is, indexed from 0)
+	 */
+	manager_links_array.numlinks = NUMHOSTS;
+	netCreateConnections(& manager_links_array);
 
-/* Create links between nodes but not setting their end nodes */
+	/* Create links between nodes but not setting their end nodes */
+	links_array.numlinks = NUMLINKS;
+	netCreateLinks(& links_array);
 
-linkArray.numlinks = NUMLINKS;
-netCreateLinks(& linkArray);
+	/* Set the end nodes of the links */
+	netSetNetworkTopology(& links_array);
 
-/* Set the end nodes of the links */
+	/* Create nodes and spawn their own processes, one process per node */
+	for (host_physid = 0; host_physid < NUMHOSTS; host_physid++) {
 
-netSetNetworkTopology(& linkArray);
+	   process_id = fork();
 
-/* Create nodes and spawn their own processes, one process per node */ 
+	   if (process_id == -1) {
+		  printf("Error:  the fork() failed\n");
+		  return;
+	   }
+	   else if (process_id == 0) {
+		  /* The child process -- a host node */
 
-for (physid = 0; physid < NUMHOSTS; physid++) {
+		  /* Initialize host's state */
+		  hostInit(&host_state, host_physid);
 
-   pid = fork();
+		  /* Initialize the connection to the manager */
+		  host_state.manLink = manager_links_array.links[host_physid];
 
-   if (pid == -1) {
-      printf("Error:  the fork() failed\n");
-      return;
-   }
-   else if (pid == 0) { /* The child process -- a host node */
+		  /*
+		   * Close all connections not connect to the host
+		   * Also close the manager's side of connections to host
+		   */
+		  netCloseConnections(& manager_links_array, host_physid);
 
-      hostInit(&hstate, physid);              /* Initialize host's state */
+		  /* Initialize the host's incident communication links */
+		  int k;
+		  k = netHostOutLink(&links_array, host_physid); /* Host's OUTGOING link */
+		  host_state.link_out = links_array.link[k];
 
-      /* Initialize the connection to the manager */ 
-      hstate.manLink = manLinkArray.link[physid];
+		  k = netHostInLink(&links_array, host_physid); /* Host's INCOMING link */
+		  host_state.link_in = links_array.link[k];
 
-      /* 
-       * Close all connections not connect to the host
-       * Also close the manager's side of connections to host
-       */
-      netCloseConnections(& manLinkArray, physid);
+		  /* Close all other links -- not connected to the host */
+		  netCloseHostOtherLinks(&links_array, host_physid);
 
-      /* Initialize the host's incident communication links */
 
-      k = netHostOutLink(&linkArray, physid); /* Host's outgoing link */
-      hstate.linkout = linkArray.link[k];
+		  /* Go to the main loop of the host node */
+		  hostMain(&host_state);
+	   }
+	}
 
-      k = netHostInLink(&linkArray, physid); /* Host's incoming link */
-      hstate.linkin = linkArray.link[k];
+	/* The host process -- Manager interface */
 
-      /* Close all other links -- not connected to the host */
-      netCloseHostOtherLinks(& linkArray, physid);
+	/*
+	 * The manager is connected to the hosts and doesn't
+	 * need the links between nodes
+	 */
 
-      /* Go to the main loop of the host node */
-      hostMain(&hstate);
-   }  
-}
+	/* Close all links between nodes */
+	netCloseLinks(&links_array);
 
-/* Manager */
+	/* Close the host's side of connections between a host and manager */
+	netCloseManConnections(&manager_links_array);
 
-/* 
- * The manager is connected to the hosts and doesn't
- * need the links between nodes
- */
+	/* Go to main loop for the manager */
+	managerMain(& manager_links_array);
 
-/* Close all links between nodes */
-netCloseLinks(&linkArray);
-
-/* Close the host's side of connections between a host and manager */
-netCloseManConnections(&manLinkArray);
-
-/* Go to main loop for the manager */
-manMain(& manLinkArray);
-
-/* 
- * We reach here if the user types the "q" (quit) command.
- * Now if we don't do anything, the child processes will continue even
- * after we terminate the parent process.  That's because these
- * child proceses are running an infinite loop and do not exit 
- * properly.  Since they have no parent, and no way of controlling
- * them, they are called "zombie" processes.  Actually, to get rid
- * of them you would list your processes using the LINUX command
- * "ps -x".  Then kill them one by one using the "kill" command.  
- * To use the kill the command just type "kill" and the process ID (PID).
- *
- * The following system call will kill all the children processes, so
- * that saves us some manual labor
- */
-kill(0, SIGKILL); /* Kill all processes */
+	/*
+	 * We reach here if the user types the "q" (quit) command.
+	 * Now if we don't do anything, the child processes will continue even
+	 * after we terminate the parent process.  That's because these
+	 * child proceses are running an infinite loop and do not exit
+	 * properly.  Since they have no parent, and no way of controlling
+	 * them, they are called "zombie" processes.  Actually, to get rid
+	 * of them you would list your processes using the LINUX command
+	 * "ps -x".  Then kill them one by one using the "kill" command.
+	 * To use the kill the command just type "kill" and the process ID (PID).
+	 *
+	 * The following system call will kill all the children processes, so
+	 * that saves us some manual labor
+	 */
+	kill(0, SIGKILL); /* Kill all processes */
 }
 
 
