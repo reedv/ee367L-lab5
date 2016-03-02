@@ -12,7 +12,11 @@
 #include "link.h"
 #include "switch.h"
 
+#define MAXBUFFER 1000
 #define TENMILLISEC 10000
+
+packetBuffer switchStoreIncomingPackets(switchState* sstate);
+void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate);
 
 
 void switchInit(switchState * sstate, int physID)
@@ -37,38 +41,14 @@ void queueInit(PacketQueue * pqueue)
 }
 
 
+
 void switchMain(switchState * sstate)
 {
-    int numInLinks;
-    int numPackets;
-    int numOutLinks;
-    int packetCount = 0;    // Number of packets on link
     int outLink;            // Link to transmit packet on
-    int inLink;             // Link incoming packet arrived on
-    packetBuffer outPacket;
-    packetBuffer packets[10];
-
+    packetBuffer outPacket; // packet to be sent
     while(1)
     {
-        // Check all incoming links for arriving packets
-        for(numInLinks=0; numInLinks<sstate->numInLinks; numInLinks++)
-        {
-            // Check link for packets
-            packetCount = linkReceive(&(sstate->inLinks[numInLinks]), packets);
-
-            // For all incoming packets on link
-            for(numPackets=0; numPackets < packetCount; numPackets++)
-            {
-                // Put in packet queue
-                queuePush(&(sstate->packetQueue), packets[numPackets]);
-
-                // Update forwarding table
-                tableUpdate(&(sstate->forwardingTable),
-                		packets[numPackets].is_valid,
-						packets[numPackets].src_addr,
-						numInLinks);
-            }
-        }
+		switchStoreIncomingPackets(sstate);
 
         // If queue is not empty, transmit a packet
         if(sstate->packetQueue.size != 0)
@@ -79,30 +59,8 @@ void switchMain(switchState * sstate)
             // Check forwarding table for outgoing link
             outLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.dest_addr);
 
-            if (outPacket.src_addr != -1 )
-            {
-                // If out going link exists in table
-                if(outLink != -1)
-                {
-                    // Transmit packet on the outgoing link
-                    linkSend(&(sstate->outLinks[outLink]), &outPacket);
-                }
-
-                // Else send to all links except for the incoming one
-                else
-                {
-                    // Get source link of packet
-                    inLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.src_addr);
-
-                    // For all outgoing links
-                    for(numOutLinks=0; numOutLinks<sstate->numOutLinks; numOutLinks++)
-                    {
-                        // Send on link if its not the incoming link
-                        if(numOutLinks != inLink)
-                            linkSend(&(sstate->outLinks[numOutLinks]), &outPacket);
-                    }
-                }
-            }
+            // If incoming addr of packet to be sent exists
+			switchSendOutPacket(outPacket, outLink, sstate);
         }
 
         // Sleep for 10 milliseconds
@@ -110,9 +68,45 @@ void switchMain(switchState * sstate)
     }
 }
 
+void switchStoreIncomingPackets(switchState* sstate) {
+	int numInLinks;
+	packetBuffer packet[MAXBUFFER];
+	// Check all incoming links for arriving packets
+	for (numInLinks = 0; numInLinks < sstate->numInLinks; numInLinks++) {
+		// Check link for packets
+		linkReceive(&(sstate->inLinks[numInLinks]), packet);
+		// Put in packet queue
+		queuePush(&(sstate->packetQueue), packet);
+		// Update forwarding table
+		tableUpdate(&(sstate->forwardingTable),
+				packet.is_valid, packet.src_addr, numInLinks);
+	}
+}
 
-
-
+void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate) {
+	// If incoming addr of packet to be sent exists
+	if (outPacket.src_addr != -1) {
+		// If outgoing link exists in table
+		if (outLink != -1) {
+			// Transmit packet on the outgoing link
+			linkSend(&(sstate->outLinks[outLink]), &outPacket);
+		}
+		// Else send to all links except for the incoming one
+		else
+		{
+			// Get source link of packet to be sent
+			int inLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.src_addr);
+			// For all outgoing links
+			int numOutLinks;
+			for (numOutLinks = 0; numOutLinks < sstate->numOutLinks;
+					numOutLinks++) {
+				// Send on link if its not the incoming link
+				if (numOutLinks != inLink)
+					linkSend(&(sstate->outLinks[numOutLinks]), &outPacket);
+			}
+		}
+	}
+}
 
 
 

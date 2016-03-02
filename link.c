@@ -94,7 +94,7 @@ int linkCreate(LinkInfo * link)
 }
 
 /*
- * Checks incoming link and if stores it in a packet buffer.
+ * Checks incoming link and stores it in a packet buffer.
  * Returns the length of the contents on the incoming link.
  */
 int linkReceive(LinkInfo * link, packetBuffer * pbuff)
