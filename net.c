@@ -43,8 +43,8 @@
 #define EMPTY_ADDR  0xffff  /* Indicates that the empty address */
                              /* It also indicates that the broadcast address */
 #define MAXBUFFER 1000
-#define PIPE_WRITE 1 
 #define PIPE_READ  0
+#define PIPE_WRITE 1 
 
 /* 
  * Create nonblocking connections(pipes) between manager and hosts  

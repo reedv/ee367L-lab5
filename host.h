@@ -19,6 +19,5 @@ typedef struct { /* State of host */
 
 
 void hostMain(hostState * hstate);
-
 void hostInit(hostState * hstate, int physid);
 

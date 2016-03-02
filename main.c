@@ -12,6 +12,7 @@
 #include "link.h"
 #include "man.h"
 #include "host.h"
+#include "switch.h"
 #include "net.h"
 
 #define EMPTY_ADDR  0xffff  /* Indicates the empty address */
@@ -22,29 +23,29 @@
 
 void main()
 {
-	hostState host_state;             /* The host's state */
-	linkArrayType links_array;
-	manLinkArrayType manager_links_array;
-
-	pid_t process_id;  /* Process id */
-	int host_physid; /* Physical ID of host */
 	int i;
 
 	/*
 	 * Create nonblocking (pipes) between manager and hosts
 	 * assuming that hosts have physical IDs 0, 1, ... (that is, indexed from 0)
 	 */
+	manLinkArrayType manager_links_array;
 	manager_links_array.numlinks = NUMHOSTS;
 	netCreateConnections(& manager_links_array);
 
 	/* Create links between nodes but not setting their end nodes */
+	linkArrayType links_array;
 	links_array.numlinks = NUMLINKS;
 	netCreateLinks(& links_array);
 
-	/* Set the end nodes of the links */
+	/* Set the end nodes of the links
+	 * CURRENTLY THERE ARE JUST 2 HOSTS LINKED TOGETHER */
 	netSetNetworkTopology(& links_array);
 
 	/* Create nodes and spawn their own processes, one process per node */
+	hostState host_state;             /* The host's state */
+	pid_t process_id;  	/* Process id */
+	int host_physid; 	/* Physical ID of host */
 	for (host_physid = 0; host_physid < NUMHOSTS; host_physid++) {
 
 	   process_id = fork();

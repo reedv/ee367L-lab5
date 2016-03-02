@@ -6,7 +6,7 @@ typedef struct { /* Packet buffer */
    int dest_addr;  /* Destination addres */
    int length;   /* Length of packet */
    char payload[PAYLOAD_LENGTH + 1];  /* Payload section */
-   int is_valid;   /* Indicates if the contents is valid */ 
+   int is_valid;   /* Indicates if the contents are valid */
    int new;     /* Indicates if the contents has been downloaded */
 } packetBuffer;
 
