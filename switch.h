@@ -56,7 +56,7 @@ void queueDisplay(PacketQueue * pqueue);
 void tableInit(ForwardingTable * ftable);
 void tableAddEntry(ForwardingTable * ftable, int valid, int dest_addr, int linkOut);
 int tableEntryIndex(ForwardingTable * ftable, int dest_addr);
-void tableUpdateEntry(ForwardingTable * ftable, int valid, int dstaddr, int linkOut);
+void tableUpdateEntry(ForwardingTable * ftable, int table_index, int valid, int linkOut);
 void tableUpdate(ForwardingTable * ftable, int valid, int dest_addr, int linkOut);
 int tableGetOutLink(ForwardingTable * ftable, int dest_addr);
 void tableDisplay(ForwardingTable * ftable);
@@ -64,5 +64,7 @@ void tableDisplay(ForwardingTable * ftable);
 
 void switchInit(switchState * sstate, int physid);
 void switchMain(switchState * sstate);
+void switchStoreIncomingPackets(switchState* sstate);
+void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate);
 
 #endif /* SWITCH_H_ */

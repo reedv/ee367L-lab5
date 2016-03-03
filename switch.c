@@ -15,12 +15,9 @@
 #define MAXBUFFER 1000
 #define TENMILLISEC 10000
 
-packetBuffer switchStoreIncomingPackets(switchState* sstate);
-void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate);
 
 
-void switchInit(switchState * sstate, int physID)
-{
+void switchInit(switchState * sstate, int physID) {
     sstate->physId = physID;
     sstate->numInLinks = 0;
     sstate->numOutLinks = 0;
@@ -28,13 +25,11 @@ void switchInit(switchState * sstate, int physID)
     queueInit(&(sstate->packetQueue));
 }
 
-void tableInit(ForwardingTable * ftable)
-{
+void tableInit(ForwardingTable * ftable) {
     ftable->size = 0;
 }
 
-void queueInit(PacketQueue * pqueue)
-{
+void queueInit(PacketQueue * pqueue) {
     pqueue->size = 0;
     pqueue->head = 0;
     pqueue->tail = -1;
@@ -46,21 +41,22 @@ void switchMain(switchState * sstate)
 {
     int outLink;            // Link to transmit packet on
     packetBuffer outPacket; // packet to be sent
-    while(1)
-    {
+    while(1) {
 		switchStoreIncomingPackets(sstate);
 
-        // If queue is not empty, transmit a packet
-        if(sstate->packetQueue.size != 0)
-        {
-            // Get packet from head of packet Queue
+        // If queue not empty, send next packet
+        if(sstate->packetQueue.size != 0) {
+            // Get packet from head of PacketQueue
             outPacket = queuePop(&(sstate->packetQueue));
 
-            // Check forwarding table for outgoing link
+            // Check ForwardingTable for outgoing link
             outLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.dest_addr);
 
             // If incoming addr of packet to be sent exists
-			switchSendOutPacket(outPacket, outLink, sstate);
+            if (outPacket.src_addr != -1) {
+            	// send packet to dest_addr or to all
+            	switchSendOutPacket(outPacket, outLink, sstate);
+            }
         }
 
         // Sleep for 10 milliseconds
@@ -70,98 +66,92 @@ void switchMain(switchState * sstate)
 
 void switchStoreIncomingPackets(switchState* sstate) {
 	int numInLinks;
-	packetBuffer packet[MAXBUFFER];
+	packetBuffer tmpPacket;
 	// Check all incoming links for arriving packets
 	for (numInLinks = 0; numInLinks < sstate->numInLinks; numInLinks++) {
 		// Check link for packets
-		linkReceive(&(sstate->inLinks[numInLinks]), packet);
-		// Put in packet queue
-		queuePush(&(sstate->packetQueue), packet);
-		// Update forwarding table
+		linkReceive(&(sstate->inLinks[numInLinks]), &tmpPacket);
+		// Put packet in PacketQueue
+		queuePush(&(sstate->packetQueue), tmpPacket);
+		// Update ForwardingTable
 		tableUpdate(&(sstate->forwardingTable),
-				packet.is_valid, packet.src_addr, numInLinks);
+				tmpPacket.is_valid, tmpPacket.src_addr, numInLinks);
 	}
 }
 
 void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate) {
-	// If incoming addr of packet to be sent exists
-	if (outPacket.src_addr != -1) {
-		// If outgoing link exists in table
+		// If outgoing link from ForwardingTable exists
 		if (outLink != -1) {
-			// Transmit packet on the outgoing link
+			// Send packet along the outgoing link
 			linkSend(&(sstate->outLinks[outLink]), &outPacket);
 		}
-		// Else send to all links except for the incoming one
-		else
-		{
+		// Else send to all links except for the incoming link packet was received on
+		else {
 			// Get source link of packet to be sent
 			int inLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.src_addr);
 			// For all outgoing links
 			int numOutLinks;
 			for (numOutLinks = 0; numOutLinks < sstate->numOutLinks;
 					numOutLinks++) {
-				// Send on link if its not the incoming link
+				// Send on link so long as its not the incoming link
 				if (numOutLinks != inLink)
 					linkSend(&(sstate->outLinks[numOutLinks]), &outPacket);
 			}
 		}
-	}
 }
 
 
 
-int queueIsEmpty(PacketQueue * pqueue)
-{
-    if(pqueue->size == 0)
-        return 1;
-    else return 0;
-}
+/*
+ * PacketQueue operations --------------------------------------------------------
+ * */
 
-int queueIsFull(PacketQueue * pqueue)
-{
-    if(pqueue->size == MAXQUEUE)
-        return 1;
-    else return 0;
-}
-
-void queuePush(PacketQueue * pqueue, packetBuffer packet)
-{
-    if(!queueIsFull(pqueue))
-    {
-        pqueue->tail = (pqueue->tail+1) % MAXQUEUE;  // rather than having to reset tail whenever tail > MAXQUEUE
+void queuePush(PacketQueue * pqueue, packetBuffer packet) {
+    if(!queueIsFull(pqueue)) {
+        pqueue->tail = (pqueue->tail+1) % MAXQUEUE;  // tail circles back count from 0 when tail >= MAXQUEUE
+        											 //    (avoids having to reset counter)
         pqueue->packets[pqueue->tail] = packet;
         pqueue->size++;
     }
-    else
-    {
+    else {
         printf("Error: packetQueue is full\n");
     }
 }
 
-packetBuffer queuePop(PacketQueue * pqueue)
-{
-    packetBuffer deleted;
-    if(!queueIsEmpty(pqueue))
-    {
-        deleted = pqueue->packets[pqueue->head];
-        pqueue->head = (pqueue->head+1) % MAXQUEUE;	// rather than having to reset head whenever head > MAXQUEUE
-        pqueue->size--;
-        return deleted;
-    }
-    else
-    {
-        printf("Error: packetQueue is empty\n");
-    }
+int queueIsFull(PacketQueue * pqueue) {
+    if(pqueue->size == MAXQUEUE) return 1;
+    else return 0;
 }
 
-void queueDisplay(PacketQueue * pqueue)
+
+
+packetBuffer queuePop(PacketQueue * pqueue)
 {
+    packetBuffer popped;
+    if(!queueIsEmpty(pqueue)) {
+        popped = pqueue->packets[pqueue->head];
+        pqueue->head = (pqueue->head+1) % MAXQUEUE;	// head circles back count from 0 when head >= MAXQUEUE
+        pqueue->size--;
+        return popped;
+    }
+    else {
+        printf("Error: packetQueue is empty\n");
+    }  /*TODO: OK to return nothing here?
+     	 Only used in switchMain and tableGetOutLink may take care of this there.*/
+}
+
+int queueIsEmpty(PacketQueue * pqueue) {
+    if(pqueue->size == 0) return 1;
+    else return 0;
+}
+
+
+
+void queueDisplay(PacketQueue * pqueue) {
     int i;
 
     printf("Source Address\tDest Address\tLength\tPayload\n");
-
-    for(i=pqueue->head; i <= pqueue->tail; i++)
-    {
+    for(i=pqueue->head; i <= pqueue->tail; i++) {
         printf("\t%d\t\t%d\t%d\t%s\n",
         		pqueue->packets[i].src_addr,
 				pqueue->packets[i].dest_addr,
@@ -172,71 +162,72 @@ void queueDisplay(PacketQueue * pqueue)
 
 
 
+/*
+ * ForwardingTable operations --------------------------------------------------------
+ * */
 
+// Update the table
+void tableUpdate(ForwardingTable * ftable, int valid,
+				 int dest_addr, int linkOut) {
+    int table_index;
 
+    table_index = tableEntryIndex(ftable, dest_addr);
 
+    // if index not yet in table
+    if(table_index == -1)
+        tableAddEntry(ftable, valid, dest_addr, linkOut);
+    // else modify the entry with the specified dest_addr
+    else
+    	tableUpdateEntry(ftable, table_index, valid, linkOut);
+}
 
-void tableAddEntry(ForwardingTable * ftable, int valid, int dest_addr, int linkOut)
-{
-    TableEntry newentry;
-    newentry.valid = valid;
-    newentry.dest_addr = dest_addr;
-    newentry.linkOut = linkOut;
-    ftable->entries[ftable->size] = newentry;
+void tableAddEntry(ForwardingTable * ftable, int valid,
+				   int dest_addr, int linkOut) {
+    TableEntry entry;
+
+    entry.valid = valid;
+    entry.dest_addr = dest_addr;
+    entry.linkOut = linkOut;
+
+    ftable->entries[ftable->size] = entry;
     ftable->size++;
 }
 
-// Find the index of an entry in the table
-int tableEntryIndex(ForwardingTable * ftable, int dest_addr)
-{
-    int i;
-    for(i=0; i<ftable->size; i++)
-    {
-        if(ftable->entries[i].dest_addr == dest_addr)
-            return i;
-    }
-    return -1;
-}
-
 // Update an existing entry in the table
-void tableUpdateEntry(ForwardingTable * ftable, int i, int valid, int linkOut)
-{
-    ftable->entries[i].valid = valid;
-    ftable->entries[i].linkOut = linkOut;
+void tableUpdateEntry(ForwardingTable * ftable, int table_index,
+					  int valid, int linkOut) {
+    ftable->entries[table_index].valid = valid;
+    ftable->entries[table_index].linkOut = linkOut;
 }
 
-// Update the table
-void tableUpdate(ForwardingTable * ftable, int valid, int dest_addr, int linkOut)
-{
-    int i;
 
-    i = tableEntryIndex(ftable, dest_addr);
-
-    if(i == -1)
-        tableAddEntry(ftable, valid, dest_addr, linkOut);
-    else tableUpdateEntry(ftable, i, valid, linkOut);
-}
 
 // Retrieve the value of the out link
-int tableGetOutLink(ForwardingTable * ftable, int dest_addr)
-{
-    int i;
+int tableGetOutLink(ForwardingTable * ftable, int dest_addr) {
+    int table_index;
     int linkOut;
 
-    i = tableEntryIndex(ftable, dest_addr);
+    table_index = tableEntryIndex(ftable, dest_addr);
 
-    if(i == -1)
-        return i;
-
-    else
-    {
-        linkOut = ftable->entries[i].linkOut;
+    if(table_index == -1)
+        return table_index;
+    else {
+        linkOut = ftable->entries[table_index].linkOut;
         return linkOut;
     }
 }
 
-void tableDisplay(ForwardingTable * ftable)
-{
+// Find the index of an entry in the table
+int tableEntryIndex(ForwardingTable * ftable, int dest_addr) {
+    int table_index;
+    for(table_index=0; table_index < ftable->size; table_index++) {
+        if(ftable->entries[table_index].dest_addr == dest_addr)
+            return table_index;
+    }
+    return -1;
+}
+
+void tableDisplay(ForwardingTable * ftable) {
     printf("Valid\tDestination Address\tLink Out #\n");
 
     int i;
