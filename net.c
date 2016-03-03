@@ -80,8 +80,8 @@ void netCreateConnections(manLinkArrayType * manLinkArray)
 }
 
 /* 
- * Creates links to be used between nodes but does not set the
- * end nodes of the links
+ * Creates links to be used between nodes
+ * but does not set the nodes for the ends of the links
  */
 void netCreateLinks(linkArrayType * linkArray)
 { 
@@ -127,16 +127,19 @@ void netCloseConnections(manLinkArrayType *  manLinkArray, int hostid)
 }
 
 /*
- * Sets the end nodes of the links.
- * CURRENTLY THERE ARE JUST 2 HOSTS LINKED TOGETHER
+ * Sets the end nodes incident on the links in the linkArray
+ * CURRENTLY SET UP FOR TESTING SWITCHING NODE
  */
-
 void netSetNetworkTopology(linkArrayType * linkArray)
 {
-linkArray->link[0].uniPipeInfo.src_physId = 0;
-linkArray->link[0].uniPipeInfo.dest_physId = 1;
-linkArray->link[1].uniPipeInfo.src_physId = 1;
-linkArray->link[1].uniPipeInfo.dest_physId = 0;
+linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
+linkArray->link[0].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+
+linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1
+linkArray->link[1].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+
+linkArray->link[2].uniPipeInfo.src_physId = 2;   // link0 comes from host2
+linkArray->link[2].uniPipeInfo.dest_physId = 3;  //       goes to switch3
 }
 
 /*

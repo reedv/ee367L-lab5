@@ -31,13 +31,13 @@ int main()
 	manLinkArrayType manager_links_array;
 	// set the number of hosts manager can connect to
 	manager_links_array.numlinks = NUMHOSTS;
-	// populate the manager links array with nonblocking  managerLinks
+	// for expected number of hosts, populate the manager links array with managerLinks
 	netCreateConnections(& manager_links_array);
 
 	/* Create links between nodes but not setting their end nodes */
 	linkArrayType links_array;
 	links_array.numlinks = NUMLINKS;
-	// populate linkArrayType with nonblocking, unipipe links
+	// for expected number of links, populate linkArrayType with links
 	netCreateLinks(& links_array);
 
 	/* Set the end nodes of the links
