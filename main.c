@@ -21,7 +21,7 @@
 #define PIPE_WRITE 1 
 #define PIPE_READ  0
 
-void main()
+int main()
 {
 	int i;
 
@@ -52,7 +52,7 @@ void main()
 
 	   if (process_id == -1) {
 		  printf("Error:  the fork() failed\n");
-		  return;
+		  return 0;
 	   }
 	   else if (process_id == 0) {
 		  /* The child process -- a host node */
@@ -83,6 +83,7 @@ void main()
 
 		  /* Go to the main loop of the host node */
 		  hostMain(&host_state);
+		  return 0;
 	   }
 	}
 
@@ -117,6 +118,7 @@ void main()
 	 * that saves us some manual labor
 	 */
 	kill(0, SIGKILL); /* Kill all processes */
+	return 0;
 }
 
 
