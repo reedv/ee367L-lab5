@@ -17,8 +17,8 @@
 
 
 
-void switchInit(switchState * sstate, int physID) {
-    sstate->physId = physID;
+void switchInit(switchState * sstate, int physid) {
+    sstate->physId = physid;
     sstate->numInLinks = 0;
     sstate->numOutLinks = 0;
     tableInit(&(sstate->forwardingTable));

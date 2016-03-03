@@ -51,7 +51,7 @@ int main()
 	int physid; 		/* Physical ID of host */
 	// init. each host
 	for (physid = 0; physid < NUMHOSTS+NUMSWITCHES; physid++) {
-
+	   printf("** physid = %d \n", physid);
 	   process_id = fork();
 
 	   if (process_id == -1) {
@@ -61,38 +61,40 @@ int main()
 	   else if (process_id == 0) {
 		   /* The child process -- inti. a host node and go to hostMain loop*/
 
+
 		   // init. all hosts
 		   if (physid < NUMHOSTS) {
 
-		  /* Initialize host's state */
-		  hostInit(&host_state, physid);
+			  /* Initialize host's state */
+			  hostInit(&host_state, physid);
 
-		  /* Initialize the host's managerLink connection to the manager */
-		  // adds host's physid to the manager's array of connectable hosts
-		  host_state.manLink = manager_links_array.links[physid];
+			  /* Initialize the host's managerLink connection to the manager */
+			  // adds host's physid to the manager's array of connectable hosts
+			  host_state.manLink = manager_links_array.links[physid];
 
-		  /*
-		   * Close all managerLink connections not incident to the host
-		   * Also close the manager's side of connections to host
-		   * (creates bi-link between host and manager using 2 oneway links)
-		   */
-		  netCloseConnections(& manager_links_array, physid);
+			  /*
+			   * Close all managerLink connections not incident to the host
+			   * Also close the manager's side of connections to host
+			   * (creates bi-link between host and manager using 2 oneway links)
+			   */
+			  netCloseConnections(& manager_links_array, physid);
 
-		  /* Initialize the host's incident communication links */
-		  int host_link_index;
-		  // set host's link_out from linkArrayType
-		  host_link_index = netHostOutLink(&links_array, physid); /* Host's OUTGOING link (if any) */
-		  host_state.link_out = links_array.link[host_link_index];
-		  // set host's link_in from linkArrayType
-		  host_link_index = netHostInLink(&links_array, physid); /* Host's INCOMING link (if any) */
-		  host_state.link_in = links_array.link[host_link_index];
+			  /* Initialize the host's incident communication links */
+			  int host_link_index;
+			  // set host's link_out from linkArrayType
+			  host_link_index = netHostOutLink(&links_array, physid); /* Host's OUTGOING link (if any) */
+			  host_state.link_out = links_array.link[host_link_index];
+			  // set host's link_in from linkArrayType
+			  host_link_index = netHostInLink(&links_array, physid); /* Host's INCOMING link (if any) */
+			  host_state.link_in = links_array.link[host_link_index];
 
-		  /* Close all other links -- not incident to the host */
-		  netCloseHostOtherLinks(&links_array, physid);
+			  /* Close all other links -- not incident to the host */
+			  netCloseNonincidentLinks(&links_array, physid);
 
 
-		  /* Go to the main loop of the host node */
-		  hostMain(&host_state);
+			  /* Go to the main loop of the host node */
+			  hostMain(&host_state);
+
 		   }
 		   // init. all switches: CURRENTLY HARDCODED TO SETUP A SINGLE SWITCH WITH 3 BI-CONNECTIONS
 		   else {
@@ -103,27 +105,39 @@ int main()
 			   switch_state.numInLinks = 3;
 			   switch_state.numOutLinks = 3;
 
-			   int links_index,
-			   	   switch_links_index;
+			   int i,
+			   	   k;
 			   // find all links in links_array that belong in switch's outLinks array
-			   for (links_index=0, switch_links_index=0; links_index < links_array.numlinks; links_index++) {
+			   for (i=0, k=0; i < links_array.numlinks; i++) {
 			   	   /* Store index if an outgoing link is found */
-			   	   if (links_array.link[links_index].uniPipeInfo.src_physId == physid) {
-			   		   switch_state.outLinks[switch_links_index] = links_array.link[links_index];
-			   		   switch_links_index++;
+			   	   if (links_array.link[i].uniPipeInfo.src_physId == physid) {
+			   		   switch_state.outLinks[k] = links_array.link[i];
+			   		   k++;
 			   	   }
 			   	}
 			   // find all links in links_array that belong in switch's inLinks array
-			   for (links_index=0, switch_links_index=0; links_index < links_array.numlinks; links_index++) {
+			   for (i=0, k=0; i < links_array.numlinks; i++) {
 				   /* Store index if an incoming link is found */
-				   if (links_array.link[links_index].uniPipeInfo.dest_physId == physid) {
-					   switch_state.inLinks[switch_links_index] = links_array.link[links_index];
-					   switch_links_index++;
+				   if (links_array.link[i].uniPipeInfo.dest_physId == physid) {
+					   switch_state.inLinks[k] = links_array.link[i];
+					   k++;
 				   }
 				}
 
 			   // close links not incident to the switch
-			   netCloseHostOtherLinks(&links_array, physid);
+			   netCloseNonincidentLinks(&links_array, physid);
+
+			   // close manger links, since switches never connect to them
+			   int manLink;
+			   for (manLink=0; manLink < manager_links_array.numlinks; manLink++) {
+				   close(manager_links_array.links[manLink].toHost[0]);
+				   close(manager_links_array.links[manLink].toHost[1]);
+				   close(manager_links_array.links[manLink].fromHost[0]);
+				   close(manager_links_array.links[manLink].fromHost[1]);
+			   }
+
+			   // go to main loop of switch node
+			   switchMain(&switch_state);
 		   }
 
 		  return 0;

@@ -198,7 +198,7 @@ int netHostInLink(linkArrayType * linkArray, int hostid)
 /*
  * Close links not connected to the host
  */
-void netCloseHostOtherLinks(linkArrayType * linkArray, int hostid)
+void netCloseNonincidentLinks(linkArrayType * linkArray, int hostid)
 {
 	int i;
 
