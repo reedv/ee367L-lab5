@@ -66,6 +66,8 @@ for switching nodes.
    		** Going to try to add inti. of switch w/in for loop that inits. each host node
    			** BUG: After trying to add initalization of switch as a child process, net367 freezes when trying 
    			to transmit packages between hosts.
+   				***TRY: commenting out block that inits. switch and just try connecting all 3 hosts and sending a 
+   				packet from host1 to host2 to check likelyhood that problem is with the block initalizing the switch
    		** Use this seq. of commands to set up dirs for testing:
    			d 
 		   	f 
