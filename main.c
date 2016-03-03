@@ -34,14 +34,13 @@ int main()
 	// for expected number of hosts, populate the manager links array with managerLinks
 	netCreateConnections(& manager_links_array);
 
-	/* Create links between nodes but not setting their end nodes */
+	/* Create links to connect nodes but not actually setting their incident nodes */
 	linkArrayType links_array;
 	links_array.numlinks = NUMLINKS;
 	// for expected number of links, populate linkArrayType with links
 	netCreateLinks(& links_array);
 
 	/* Set the end nodes of the links
-	 * CURRENTLY THERE ARE JUST 2 HOSTS LINKED TOGETHER
 	 * TODO: Change to have 3 hosts connected to a switch and a manager connected to a host*/
 	netSetNetworkTopology(& links_array);
 
@@ -59,7 +58,7 @@ int main()
 		  return 0;
 	   }
 	   else if (process_id == 0) {
-		  /* The child process -- a host node */
+		  /* The child process -- inti. a host node and go to hostMain loop*/
 
 		  /* Initialize host's state */
 		  hostInit(&host_state, host_physid);
@@ -94,14 +93,13 @@ int main()
 	   }
 	}
 
-	/* The host process -- Manager interface */
+	/* The parent process -- Manager interface */
 
 	/*
 	 * The manager is connected to the hosts and doesn't
 	 * need the links between nodes
 	 */
-
-	/* Close all links between nodes */
+	/* Close all links between nodes in this process */
 	netCloseLinks(&links_array);
 
 	/* Close the host's side of connections between a host and manager */

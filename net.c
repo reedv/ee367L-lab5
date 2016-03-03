@@ -128,7 +128,7 @@ void netCloseConnections(manLinkArrayType *  manLinkArray, int hostid)
 
 /*
  * Sets the end nodes incident on the links in the linkArray
- * CURRENTLY SET UP FOR TESTING SWITCHING NODE
+ * CURRENTLY SET UP FOR TESTING 3 HOSTS CONNECTED TO A SWITCH
  */
 void netSetNetworkTopology(linkArrayType * linkArray)
 {
@@ -201,10 +201,9 @@ void netCloseHostOtherLinks(linkArrayType * linkArray, int hostid)
 /* Close all links*/
 void netCloseLinks(linkArrayType * linkArray) 
 {
-int i;
-
-for (i=0; i<linkArray->numlinks; i++) 
-   linkClear(&(linkArray->link[i]));
+	int link_index;
+	for (link_index=0; link_index<linkArray->numlinks; link_index++)
+	   linkClear(&(linkArray->link[link_index]));
 }
 
 
@@ -212,10 +211,9 @@ for (i=0; i<linkArray->numlinks; i++)
 void netCloseManConnections(manLinkArrayType * manLinkArray)
 {
 	int i;
-
 	for (i=0; i < manLinkArray->numlinks; i++) {
-	   close(manLinkArray->links[i].toHost[PIPE_READ]);     // pipe only to send to host
-	   close(manLinkArray->links[i].fromHost[PIPE_WRITE]);  // pipe only to rcv from host
+	   close(manLinkArray->links[i].toHost[PIPE_READ]);     // pipe only to send toHost
+	   close(manLinkArray->links[i].fromHost[PIPE_WRITE]);  // pipe only to rcv fromHost
 	}
 }
 
