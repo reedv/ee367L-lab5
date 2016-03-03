@@ -178,7 +178,7 @@ void hostMain(hostState * hstate)
 	char word[1000];
 	int  value;
 	char reply_msg[1000];   /* Reply message to be displayed at the manager */
-	packetBuffer tmpbuff;
+	packetBuffer tmpPacket;
 
 	while(1) {
 
@@ -224,15 +224,17 @@ void hostMain(hostState * hstate)
 	   } /* end of if */
 
 	   /* Check if there is an incoming packet */
-	   linkReceive(&(hstate->link_in), &tmpbuff);
+	   linkReceive(&(hstate->link_in), &tmpPacket);
 
 	   /*
 		* If there is a packet and if the packet's destination address
 		* is the host's network address then store the packet in the
 		* receive packet buffer
 		*/
-	   if (tmpbuff.dest_addr == hstate->netaddr && tmpbuff.is_valid == 1 && tmpbuff.new == 1) {
-		  hstate->rcvPacketBuff = tmpbuff;
+	   if (tmpPacket.dest_addr == hstate->netaddr &&
+			   tmpPacket.is_valid == 1 &&
+			   tmpPacket.new == 1) {
+		  hstate->rcvPacketBuff = tmpPacket;
 		  hstate->rcvPacketBuff.new = 1;
 		  hstate->rcvPacketBuff.is_valid = 1;
 	   }

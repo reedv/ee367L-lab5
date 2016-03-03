@@ -52,16 +52,12 @@
  */
 void netCreateConnections(manLinkArrayType * manLinkArray) 
 {
-	int i;
+	int link_index;
 	int pflag;
-
-	for (i=0; i < manLinkArray->numlinks; i++) {
+	// for the expected size of manLinkArray, populate with nonblocking toHost and fromHost manLinks
+	for (link_index=0; link_index < manLinkArray->numlinks; link_index++) {
 	   // create filedes links toHost and fromHost
-	   if (pipe(manLinkArray->links[i].toHost) < 0) {
-		  printf("Creating pipe failed\n");
-		  return;
-	   }
-	   if (pipe(manLinkArray->links[i].fromHost) < 0) {
+	   if (pipe(manLinkArray->links[link_index].toHost) < 0 || pipe(manLinkArray->links[link_index].fromHost) < 0) {
 		  printf("Creating pipe failed\n");
 		  return;
 	   }
@@ -69,17 +65,17 @@ void netCreateConnections(manLinkArrayType * manLinkArray)
 	   /* Set the pipes to nonblocking */
 	   const int in_filedes = 0,
 			   	 out_filedes = 1;
-	   pflag = fcntl(manLinkArray->links[i].toHost[in_filedes], F_GETFL);
-	   fcntl(manLinkArray->links[i].toHost[in_filedes], F_SETFL, pflag | O_NONBLOCK);
+	   pflag = fcntl(manLinkArray->links[link_index].toHost[in_filedes], F_GETFL);
+	   fcntl(manLinkArray->links[link_index].toHost[in_filedes], F_SETFL, pflag | O_NONBLOCK);
 
-	   pflag = fcntl(manLinkArray->links[i].toHost[out_filedes],F_GETFL);
-	   fcntl(manLinkArray->links[i].toHost[out_filedes], F_SETFL, pflag | O_NONBLOCK);
+	   pflag = fcntl(manLinkArray->links[link_index].toHost[out_filedes],F_GETFL);
+	   fcntl(manLinkArray->links[link_index].toHost[out_filedes], F_SETFL, pflag | O_NONBLOCK);
 
-	   pflag = fcntl(manLinkArray->links[i].fromHost[in_filedes],F_GETFL);
-	   fcntl(manLinkArray->links[i].fromHost[in_filedes], F_SETFL, pflag | O_NONBLOCK);
+	   pflag = fcntl(manLinkArray->links[link_index].fromHost[in_filedes],F_GETFL);
+	   fcntl(manLinkArray->links[link_index].fromHost[in_filedes], F_SETFL, pflag | O_NONBLOCK);
 
-	   pflag = fcntl(manLinkArray->links[i].fromHost[out_filedes],F_GETFL);
-	   fcntl(manLinkArray->links[i].fromHost[out_filedes], F_SETFL, pflag | O_NONBLOCK);
+	   pflag = fcntl(manLinkArray->links[link_index].fromHost[out_filedes],F_GETFL);
+	   fcntl(manLinkArray->links[link_index].fromHost[out_filedes], F_SETFL, pflag | O_NONBLOCK);
 	}
 }
 
@@ -89,15 +85,16 @@ void netCreateConnections(manLinkArrayType * manLinkArray)
  */
 void netCreateLinks(linkArrayType * linkArray)
 { 
-	int i;
-	for (i=0; i < linkArray->numlinks; i++) {
-	   // set link infr
-	   linkArray->link[i].linkID = i;
-	   linkArray->link[i].linkType = UNIPIPE;
-	   linkArray->link[i].uniPipeInfo.pipeType = NONBLOCKING;
+	// populate linkArray with links
+	int link_index;
+	for (link_index=0; link_index < linkArray->numlinks; link_index++) {
+	   // set link info
+	   linkArray->link[link_index].linkID = link_index;
+	   linkArray->link[link_index].linkType = UNIPIPE;
+	   linkArray->link[link_index].uniPipeInfo.pipeType = NONBLOCKING;
 
-	   // set pipe filedes for link
-	   linkCreate(&(linkArray->link[i]));
+	   // set pipe filedes for the link
+	   linkCreate(&(linkArray->link[link_index]));
 	}
 }
 
@@ -105,18 +102,20 @@ void netCreateLinks(linkArrayType * linkArray)
  * Close all connections except
  * the outgoing connection from the host to manager
  * and the incoming connection from the manager to host.
+ * (creates single bi-link using 2 oneway links)
  */
 void netCloseConnections(manLinkArrayType *  manLinkArray, int hostid)
 {
-	int i;
+	int manLink_index;
 
 	/* Close all connections not incident to the host */
-	for (i=0; i<manLinkArray->numlinks; i++) {
-	   if (i != hostid) {
-		  close(manLinkArray->links[i].toHost[0]);
-		  close(manLinkArray->links[i].toHost[1]);
-		  close(manLinkArray->links[i].fromHost[0]);
-		  close(manLinkArray->links[i].fromHost[1]);
+	for (manLink_index=0; manLink_index < manLinkArray->numlinks; manLink_index++) {
+	   if (manLink_index != hostid) {
+		  close(manLinkArray->links[manLink_index].toHost[0]);
+		  close(manLinkArray->links[manLink_index].toHost[1]);
+
+		  close(manLinkArray->links[manLink_index].fromHost[0]);
+		  close(manLinkArray->links[manLink_index].fromHost[1]);
 	   }
 	}
 

@@ -65,17 +65,17 @@ void switchMain(switchState * sstate)
 }
 
 void switchStoreIncomingPackets(switchState* sstate) {
-	int numInLinks;
+	int inLink_index;
 	packetBuffer tmpPacket;
 	// Check all incoming links for arriving packets
-	for (numInLinks = 0; numInLinks < sstate->numInLinks; numInLinks++) {
+	for (inLink_index = 0; inLink_index < sstate->numInLinks; inLink_index++) {
 		// Check link for packets
-		linkReceive(&(sstate->inLinks[numInLinks]), &tmpPacket);
+		linkReceive(&(sstate->inLinks[inLink_index]), &tmpPacket);
 		// Put packet in PacketQueue
 		queuePush(&(sstate->packetQueue), tmpPacket);
 		// Update ForwardingTable
 		tableUpdate(&(sstate->forwardingTable),
-				tmpPacket.is_valid, tmpPacket.src_addr, numInLinks);
+				tmpPacket.is_valid, tmpPacket.src_addr, inLink_index);
 	}
 }
 
@@ -90,12 +90,12 @@ void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstat
 			// Get source link of packet to be sent
 			int inLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.src_addr);
 			// For all outgoing links
-			int numOutLinks;
-			for (numOutLinks = 0; numOutLinks < sstate->numOutLinks;
-					numOutLinks++) {
+			int outLink_index;
+			for (outLink_index = 0; outLink_index < sstate->numOutLinks;
+					outLink_index++) {
 				// Send on link so long as its not the incoming link
-				if (numOutLinks != inLink)
-					linkSend(&(sstate->outLinks[numOutLinks]), &outPacket);
+				if (outLink_index != inLink)
+					linkSend(&(sstate->outLinks[outLink_index]), &outPacket);
 			}
 		}
 }

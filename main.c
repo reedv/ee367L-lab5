@@ -24,35 +24,38 @@
 
 int main()
 {
-	int i;
-
 	/*
 	 * Create nonblocking (pipes) between manager and hosts
 	 * assuming that hosts have physical IDs 0, 1, ... (that is, indexed from 0)
 	 */
 	manLinkArrayType manager_links_array;
+	// set the number of hosts manager can connect to
 	manager_links_array.numlinks = NUMHOSTS;
+	// populate the manager links array with nonblocking  managerLinks
 	netCreateConnections(& manager_links_array);
 
 	/* Create links between nodes but not setting their end nodes */
 	linkArrayType links_array;
 	links_array.numlinks = NUMLINKS;
+	// populate linkArrayType with nonblocking, unipipe links
 	netCreateLinks(& links_array);
 
 	/* Set the end nodes of the links
-	 * CURRENTLY THERE ARE JUST 2 HOSTS LINKED TOGETHER */
+	 * CURRENTLY THERE ARE JUST 2 HOSTS LINKED TOGETHER
+	 * TODO: Change to have 3 hosts connected to a switch and a manager connected to a host*/
 	netSetNetworkTopology(& links_array);
 
 	/* Create nodes and spawn their own processes, one process per node */
-	hostState host_state;             /* The host's state */
-	pid_t process_id;  	/* Process id */
-	int host_physid; 	/* Physical ID of host */
+	hostState host_state;   /* The host's state */
+	pid_t process_id;  		/* Process id */
+	int host_physid; 		/* Physical ID of host */
+	// init. each host
 	for (host_physid = 0; host_physid < NUMHOSTS; host_physid++) {
 
 	   process_id = fork();
 
 	   if (process_id == -1) {
-		  printf("Error:  the fork() failed\n");
+		  printf("Error: the fork() failed\n");
 		  return 0;
 	   }
 	   else if (process_id == 0) {
@@ -61,24 +64,27 @@ int main()
 		  /* Initialize host's state */
 		  hostInit(&host_state, host_physid);
 
-		  /* Initialize the connection to the manager */
+		  /* Initialize the host's managerLink connection to the manager */
+		  // adds host's physid to the manager's array of connectable hosts
 		  host_state.manLink = manager_links_array.links[host_physid];
 
 		  /*
-		   * Close all connections not connect to the host
+		   * Close all managerLink connections not incident to the host
 		   * Also close the manager's side of connections to host
+		   * (creates bi-link between host and manager using 2 oneway links)
 		   */
 		  netCloseConnections(& manager_links_array, host_physid);
 
 		  /* Initialize the host's incident communication links */
-		  int k;
-		  k = netHostOutLink(&links_array, host_physid); /* Host's OUTGOING link */
-		  host_state.link_out = links_array.link[k];
+		  int host_link_index;
+		  // set host's link_out from linkArrayType
+		  host_link_index = netHostOutLink(&links_array, host_physid); /* Host's OUTGOING link */
+		  host_state.link_out = links_array.link[host_link_index];
+		  // set host's link_in from linkArrayType
+		  host_link_index = netHostInLink(&links_array, host_physid); /* Host's INCOMING link */
+		  host_state.link_in = links_array.link[host_link_index];
 
-		  k = netHostInLink(&links_array, host_physid); /* Host's INCOMING link */
-		  host_state.link_in = links_array.link[k];
-
-		  /* Close all other links -- not connected to the host */
+		  /* Close all other links -- not incident to the host */
 		  netCloseHostOtherLinks(&links_array, host_physid);
 
 

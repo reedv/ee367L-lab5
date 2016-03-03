@@ -38,8 +38,8 @@ typedef struct {
     int physId;
     int numInLinks;
     int numOutLinks;
-    LinkInfo * inLinks;      	// Incoming communication link
-    LinkInfo * outLinks;     	// Outgoing communication link
+    LinkInfo * inLinks;      	// Unbouned array of incoming communication links
+    LinkInfo * outLinks;     	// Unbounded array of outgoing communication links
     ForwardingTable forwardingTable;
     PacketQueue packetQueue;
 } switchState;

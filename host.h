@@ -12,7 +12,7 @@ typedef struct { /* State of host */
    int   nbraddr;             /* network address of neighbor */
    packetBuffer sendPacketBuff;  /* send packet buffer */
    packetBuffer rcvPacketBuff;   
-   managerLink manLink;       /* Connection to the manager */
+   managerLink manLink;        /* Link used to connect this host to the manager */
    LinkInfo link_in;           /* Incoming communication link */
    LinkInfo link_out;          /* Outgoing communication link */
 } hostState;
