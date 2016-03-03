@@ -46,10 +46,11 @@ int main()
 
 	/* Create nodes and spawn their own processes, one process per node */
 	hostState host_state;   /* The host's state */
+	switchState switch_state;
 	pid_t process_id;  		/* Process id */
-	int host_physid; 		/* Physical ID of host */
+	int physid; 		/* Physical ID of host */
 	// init. each host
-	for (host_physid = 0; host_physid < NUMHOSTS; host_physid++) {
+	for (physid = 0; physid < NUMHOSTS+NUMSWITCHES; physid++) {
 
 	   process_id = fork();
 
@@ -58,37 +59,52 @@ int main()
 		  return 0;
 	   }
 	   else if (process_id == 0) {
-		  /* The child process -- inti. a host node and go to hostMain loop*/
+		   /* The child process -- inti. a host node and go to hostMain loop*/
+
+		   // init. all hosts
+		   if (physid < NUMHOSTS) {
 
 		  /* Initialize host's state */
-		  hostInit(&host_state, host_physid);
+		  hostInit(&host_state, physid);
 
 		  /* Initialize the host's managerLink connection to the manager */
 		  // adds host's physid to the manager's array of connectable hosts
-		  host_state.manLink = manager_links_array.links[host_physid];
+		  host_state.manLink = manager_links_array.links[physid];
 
 		  /*
 		   * Close all managerLink connections not incident to the host
 		   * Also close the manager's side of connections to host
 		   * (creates bi-link between host and manager using 2 oneway links)
 		   */
-		  netCloseConnections(& manager_links_array, host_physid);
+		  netCloseConnections(& manager_links_array, physid);
 
 		  /* Initialize the host's incident communication links */
 		  int host_link_index;
 		  // set host's link_out from linkArrayType
-		  host_link_index = netHostOutLink(&links_array, host_physid); /* Host's OUTGOING link */
+		  host_link_index = netHostOutLink(&links_array, physid); /* Host's OUTGOING link */
 		  host_state.link_out = links_array.link[host_link_index];
 		  // set host's link_in from linkArrayType
-		  host_link_index = netHostInLink(&links_array, host_physid); /* Host's INCOMING link */
+		  host_link_index = netHostInLink(&links_array, physid); /* Host's INCOMING link */
 		  host_state.link_in = links_array.link[host_link_index];
 
 		  /* Close all other links -- not incident to the host */
-		  netCloseHostOtherLinks(&links_array, host_physid);
+		  netCloseHostOtherLinks(&links_array, physid);
 
 
 		  /* Go to the main loop of the host node */
 		  hostMain(&host_state);
+		   }
+		   // init. all switches
+		   else {
+			   // inti. switch's state
+			   switchInit(switch_state, physid);
+
+			   // inti. switch's incident communication links
+
+			   // close links not incident to the switch
+			   netCloseHostOtherLinks(&links_array, physid);
+		   }
+
 		  return 0;
 	   }
 	}

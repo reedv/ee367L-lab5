@@ -8,6 +8,7 @@
 #ifndef SWITCH_H_
 #define SWITCH_H_
 
+#define NUMSWITCHES 1  // for initial testing purposes
 #define MAXQUEUE 5
 #define MAXTABLE 10
 
