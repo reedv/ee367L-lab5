@@ -39,6 +39,7 @@ void queueInit(PacketQueue * pqueue) {
 
 void switchMain(switchState * sstate)
 {
+	printf("\n** switch.c/switchMain\n");
     int outLink;            // Link to transmit packet on
     packetBuffer outPacket; // packet to be sent
     while(1) {
@@ -65,6 +66,7 @@ void switchMain(switchState * sstate)
 }
 
 void switchStoreIncomingPackets(switchState* sstate) {
+	printf("\n** switch.c/switchStoreIncomingPackets\n");
 	int inLink_index;
 	packetBuffer tmpPacket;
 	// Check all incoming links for arriving packets
@@ -80,24 +82,25 @@ void switchStoreIncomingPackets(switchState* sstate) {
 }
 
 void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate) {
-		// If outgoing link from ForwardingTable exists
-		if (outLink != -1) {
-			// Send packet along the outgoing link
-			linkSend(&(sstate->outLinks[outLink]), &outPacket);
+	printf("\n** switch.c/switchSendOutPacket\n");
+	// If outgoing link from ForwardingTable exists
+	if (outLink != -1) {
+		// Send packet along the outgoing link
+		linkSend(&(sstate->outLinks[outLink]), &outPacket);
+	}
+	// Else send to all links except for the incoming link packet was received on
+	else {
+		// Get source link of packet to be sent
+		int inLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.src_addr);
+		// For all outgoing links
+		int outLink_index;
+		for (outLink_index = 0; outLink_index < sstate->numOutLinks;
+				outLink_index++) {
+			// Send on link so long as its not the incoming link
+			if (outLink_index != inLink)
+				linkSend(&(sstate->outLinks[outLink_index]), &outPacket);
 		}
-		// Else send to all links except for the incoming link packet was received on
-		else {
-			// Get source link of packet to be sent
-			int inLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.src_addr);
-			// For all outgoing links
-			int outLink_index;
-			for (outLink_index = 0; outLink_index < sstate->numOutLinks;
-					outLink_index++) {
-				// Send on link so long as its not the incoming link
-				if (outLink_index != inLink)
-					linkSend(&(sstate->outLinks[outLink_index]), &outPacket);
-			}
-		}
+	}
 }
 
 
@@ -147,6 +150,7 @@ int queueIsEmpty(PacketQueue * pqueue) {
 
 
 
+// for debugging
 void queueDisplay(PacketQueue * pqueue) {
     int i;
 
@@ -227,6 +231,9 @@ int tableEntryIndex(ForwardingTable * ftable, int dest_addr) {
     return -1;
 }
 
+
+
+// for debugging
 void tableDisplay(ForwardingTable * ftable) {
     printf("Valid\tDestination Address\tLink Out #\n");
 

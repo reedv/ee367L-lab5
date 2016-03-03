@@ -1,0 +1,93 @@
+
+This file will be used as a place to track bugs that can't be finxed in one sitting and to track progress.
+I'm mostly using this just to keep my place and train of thought for each time I come back to the code.
+It will be sectioned off according to the required improvments for the project.
+
+	NOTE: eclipse seems unable to resolve names that are not declared in the same file as they are used
+e.g. struct fields declared in main.c (like dest_addr) seem to unresolved in link.c. However the project 
+seems to comile correctly using make from the command line, so I'm assuming this is just a problem with 
+eclipse and not with the actual code.
+
+	* Simple initial test of basic functionality for host nodes:
+	1. transmit testmsg1 from TestDir1 to TestDir0
+	   download from the rcv buffer in TestDir0 as testFrom1to0
+	   (may not show up in eclipse project-view, but check actual dirs)
+	   	- cut and paste this input: 
+	   	d 
+	   	f 
+	   	h 
+	   	m 
+	   	TestDir0 
+	   	c 
+	   	1 
+	   	m 
+	   	TestDir1 
+	   	u 
+	   	testmsg1 
+	   	t 
+	   	0 
+	   	c 
+	   	0 
+	   	r 
+	   	testFrom1to0 
+	   	q
+	   	
+	   	- then go to actual dir and check modification date on testFrom1to0.txt
+	   
+    2. testlink.c
+
+	*TODO: add one-line comments to all functions and major sections of each function for documentation purposes 
+as well as to help familiarize with the existing code base. See switch.c or main.c for example.
+	
+Improvment 1:
+	* I think most of core the functionality that will be needed to make the required improvments is 
+already implemented, so remember to at least check the existing header files related to the datatypes you
+want to manipulate before reinventing the wheel. For example, I imagine the link.h/linkSend function
+will come in handy for implementing the switching nodes. Of course this assumes that the existing code works.
+	* Should read host.c to see how hosts send and receive things in order to implement similar behavior 
+for switching nodes.
+
+	
+	* Things that a switching node will need to be able to do:
+1. receive, store, and send packets.
+	- thus will need to get better understanding of how init. program already does this
+	  between host nodes.
+2. 
+	
+	* Simplest test for switching node
+1. Set up 3 hosts all connected by a switch where hostA can only send and the other hosts can only receive, 
+   then connect manager to a hostA and send a single different message to each of the other hosts. 
+   Can hardcode net.c/netSetNetworkTopology to set up this topology.
+   
+   
+   
+   * TODO: where in the existing main.c can I init. a switch struct to connect the host to?
+   		- can't put in mnager process, since disconects all links (since has direct connection to host)
+   		** Going to try to add inti. of switch w/in for loop that inits. each host node
+   			** BUG: After trying to add initalization of switch as a child process, net367 freezes when trying 
+   			to transmit packages between hosts.
+   		** Use this seq. of commands to set up dirs for testing:
+   			d 
+		   	f 
+		   	h 
+		   	m 
+		   	TestDir0 
+		   	c 
+		   	1 
+		   	m 
+		   	TestDir1
+		   	c
+		   	2
+		   	m
+		   	TestDir2
+		   	
+		   	
+		   then can test switching with...
+		   
+		   	c
+		   	1
+		   	u
+		   	testmsg1
+		   	t
+		   	2
+

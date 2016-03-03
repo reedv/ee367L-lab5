@@ -132,14 +132,24 @@ void netCloseConnections(manLinkArrayType *  manLinkArray, int hostid)
  */
 void netSetNetworkTopology(linkArrayType * linkArray)
 {
-linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
-linkArray->link[0].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+	linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
+	linkArray->link[0].uniPipeInfo.dest_physId = 3;  //       goes to switch3
 
-linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1
-linkArray->link[1].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+	linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1
+	linkArray->link[1].uniPipeInfo.dest_physId = 3;  //       goes to switch3
 
-linkArray->link[2].uniPipeInfo.src_physId = 2;   // link0 comes from host2
-linkArray->link[2].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+	linkArray->link[2].uniPipeInfo.src_physId = 2;   // link2 comes from host2
+	linkArray->link[2].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+
+
+	linkArray->link[3].uniPipeInfo.src_physId = 3;   // link3 comes from switch3
+	linkArray->link[3].uniPipeInfo.dest_physId = 0;  //       goes to host0
+
+	linkArray->link[4].uniPipeInfo.src_physId = 3;   // link4 comes from switch3
+	linkArray->link[4].uniPipeInfo.dest_physId = 1;  //       goes to host1
+
+	linkArray->link[5].uniPipeInfo.src_physId = 3;   // link5 comes from switch3
+	linkArray->link[5].uniPipeInfo.dest_physId = 2;  //       goes to host2
 }
 
 /*
@@ -169,18 +179,20 @@ int netHostOutLink(linkArrayType * linkArray, int hostid)
  */
 int netHostInLink(linkArrayType * linkArray, int hostid) 
 {
-int i;
-int index;
+	int i;
+	int index;
 
-index = linkArray->numlinks;
+	index = linkArray->numlinks;
 
-for (i=0; i<linkArray->numlinks; i++) {
-   /* Store index if the outgoing link is found */
-   if (linkArray->link[i].uniPipeInfo.dest_physId == hostid) index = i;
-}
-if (index == linkArray->numlinks) 
-   printf("Error:  Can't find outgoing link for host\n");
-return index; 
+	for (i=0; i<linkArray->numlinks; i++) {
+	   /* Store index if the incoming link is found */
+	   if (linkArray->link[i].uniPipeInfo.dest_physId == hostid)
+		   index = i;
+	}
+
+	if (index == linkArray->numlinks)
+	   printf("Error:  Can't find outgoing link for host\n");
+	return index;
 }
 
 /*

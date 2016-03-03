@@ -81,10 +81,10 @@ int main()
 		  /* Initialize the host's incident communication links */
 		  int host_link_index;
 		  // set host's link_out from linkArrayType
-		  host_link_index = netHostOutLink(&links_array, physid); /* Host's OUTGOING link */
+		  host_link_index = netHostOutLink(&links_array, physid); /* Host's OUTGOING link (if any) */
 		  host_state.link_out = links_array.link[host_link_index];
 		  // set host's link_in from linkArrayType
-		  host_link_index = netHostInLink(&links_array, physid); /* Host's INCOMING link */
+		  host_link_index = netHostInLink(&links_array, physid); /* Host's INCOMING link (if any) */
 		  host_state.link_in = links_array.link[host_link_index];
 
 		  /* Close all other links -- not incident to the host */
@@ -94,12 +94,33 @@ int main()
 		  /* Go to the main loop of the host node */
 		  hostMain(&host_state);
 		   }
-		   // init. all switches
+		   // init. all switches: CURRENTLY HARDCODED TO SETUP A SINGLE SWITCH WITH 3 BI-CONNECTIONS
 		   else {
 			   // inti. switch's state
-			   switchInit(switch_state, physid);
+			   switchInit(&switch_state, physid);
 
 			   // inti. switch's incident communication links
+			   switch_state.numInLinks = 3;
+			   switch_state.numOutLinks = 3;
+
+			   int links_index,
+			   	   switch_links_index;
+			   // find all links in links_array that belong in switch's outLinks array
+			   for (links_index=0, switch_links_index=0; links_index < links_array.numlinks; links_index++) {
+			   	   /* Store index if an outgoing link is found */
+			   	   if (links_array.link[links_index].uniPipeInfo.src_physId == physid) {
+			   		   switch_state.outLinks[switch_links_index] = links_array.link[links_index];
+			   		   switch_links_index++;
+			   	   }
+			   	}
+			   // find all links in links_array that belong in switch's inLinks array
+			   for (links_index=0, switch_links_index=0; links_index < links_array.numlinks; links_index++) {
+				   /* Store index if an incoming link is found */
+				   if (links_array.link[links_index].uniPipeInfo.dest_physId == physid) {
+					   switch_state.inLinks[switch_links_index] = links_array.link[links_index];
+					   switch_links_index++;
+				   }
+				}
 
 			   // close links not incident to the switch
 			   netCloseHostOtherLinks(&links_array, physid);
