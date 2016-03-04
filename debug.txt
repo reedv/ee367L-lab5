@@ -127,7 +127,7 @@ for switching nodes.
 		   	c
 		   	2
 		   	m
-		   	TestDir2
+		   	TestDir2 <then press enter>
 		   	
 		   	
 		   then can test switching with...
@@ -138,4 +138,6 @@ for switching nodes.
 		   	testmsg1
 		   	t
 		   	2
+		   	
+		   	then see if message successfully transmitted to TestDir2
 
