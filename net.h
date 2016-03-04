@@ -25,7 +25,7 @@ int netHostOutLink(linkArrayType * linkArray, int hostid);
 int netHostInLink(linkArrayType * linkArray, int hostid); 
 
 /* Close links not used by the host */
-void netCloseHostOtherLinks(linkArrayType * linkArray, int hostid);
+void netCloseNonincidentLinks(linkArrayType * linkArray, int physid);
 
 /* Close all links */
 void netCloseLinks(linkArrayType * linkArray); 

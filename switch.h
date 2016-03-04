@@ -36,7 +36,7 @@ typedef struct{
 
 /* Data types for switch */
 typedef struct {
-    int physId;
+    int physid;
     int numInLinks;
     int numOutLinks;
     LinkInfo * inLinks;      	// Unbouned array of incoming communication links

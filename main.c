@@ -64,6 +64,7 @@ int main()
 
 		   // init. all hosts
 		   if (physid < NUMHOSTS) {
+			   printf("** main.c creating host process: physid = %d\n", physid);
 
 			  /* Initialize host's state */
 			  hostInit(&host_state, physid);
@@ -98,13 +99,17 @@ int main()
 		   }
 		   // init. all switches: CURRENTLY HARDCODED TO SETUP A SINGLE SWITCH WITH 3 BI-CONNECTIONS
 		   else {
+			   printf("** main.c creating switch process: physid = %d\n", physid);
+
 			   // inti. switch's state
 			   switchInit(&switch_state, physid);
 
+			   printf("** main.c creating switch process: init. switch numLinks");
 			   // inti. switch's incident communication links
 			   switch_state.numInLinks = 3;
 			   switch_state.numOutLinks = 3;
 
+			   printf("** main.c creating switch process: setting up switch links");
 			   int i,
 			   	   k;
 			   // find all links in links_array that belong in switch's outLinks array
@@ -124,18 +129,22 @@ int main()
 				   }
 				}
 
+			   printf("** main.c creating switch process: closing nonincident links");
 			   // close links not incident to the switch
 			   netCloseNonincidentLinks(&links_array, physid);
 
+			   printf("** main.c creating switch process: closing manager links");
 			   // close manger links, since switches never connect to them
 			   int manLink;
 			   for (manLink=0; manLink < manager_links_array.numlinks; manLink++) {
 				   close(manager_links_array.links[manLink].toHost[0]);
 				   close(manager_links_array.links[manLink].toHost[1]);
+
 				   close(manager_links_array.links[manLink].fromHost[0]);
 				   close(manager_links_array.links[manLink].fromHost[1]);
 			   }
 
+			   printf("** main.c creating switch process: starting switchMain loop");
 			   // go to main loop of switch node
 			   switchMain(&switch_state);
 		   }

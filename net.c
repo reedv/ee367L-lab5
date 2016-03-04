@@ -150,6 +150,12 @@ void netSetNetworkTopology(linkArrayType * linkArray)
 
 	linkArray->link[5].uniPipeInfo.src_physId = 3;   // link5 comes from switch3
 	linkArray->link[5].uniPipeInfo.dest_physId = 2;  //       goes to host2
+
+	// uncomment for testing
+//	linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
+//	linkArray->link[0].uniPipeInfo.dest_physId = 1;  //       goes to host1
+//	linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1
+//	linkArray->link[1].uniPipeInfo.dest_physId = 0;  //       goes to host0
 }
 
 /*

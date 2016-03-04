@@ -18,9 +18,12 @@
 
 
 void switchInit(switchState * sstate, int physid) {
-    sstate->physId = physid;
+	printf("** switch.c/switchInit: entered");
+    sstate->physid = physid;
     sstate->numInLinks = 0;
     sstate->numOutLinks = 0;
+
+    printf("** switch.c/switchInit: init queue and table");
     tableInit(&(sstate->forwardingTable));
     queueInit(&(sstate->packetQueue));
 }
@@ -39,7 +42,6 @@ void queueInit(PacketQueue * pqueue) {
 
 void switchMain(switchState * sstate)
 {
-	printf("\n** switch.c/switchMain\n");
     int outLink;            // Link to transmit packet on
     packetBuffer outPacket; // packet to be sent
     while(1) {
