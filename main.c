@@ -61,7 +61,7 @@ int main()
 		  return 0;
 	   }
 	   else if (process_id == 0) {
-		   /* The child process -- inti. a host node and go to hostMain loop*/
+		   /* The child process */
 
 
 		   // init. all hosts
@@ -87,9 +87,12 @@ int main()
 			  // set host's link_out from linkArrayType
 			  k = netHostOutLink(&links_array, physid); /* Host's OUTGOING link (if any) */
 			  host_state.link_out = links_array.link[k];
+			  printf("** main.c host%d: link_out dest_physid = %d\n", host_state.link_out.uniPipeInfo.dest_physId);
 			  // set host's link_in from linkArrayType
 			  k = netHostInLink(&links_array, physid); /* Host's INCOMING link (if any) */
 			  host_state.link_in = links_array.link[k];
+			  printf("** main.c host%d: link_in src_physid = %d\n", host_state.link_out.uniPipeInfo.src_physId);
+			  printf("\n\n");
 
 			  /* Close all other links -- not incident to the host */
 			  netCloseNonincidentLinks(&links_array, physid);
@@ -111,7 +114,7 @@ int main()
 			   switch_state.numInLinks = 3;
 			   switch_state.numOutLinks = 3;
 
-			   printf("** main.c creating switch process: setting up switch links");
+			   printf("** main.c creating switch process: init. switch links");
 			   int i,
 			   	   k;
 			   // find all links in links_array that belong in switch's outLinks array

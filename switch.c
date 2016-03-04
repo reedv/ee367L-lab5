@@ -46,6 +46,7 @@ void switchMain(switchState * sstate)
     int outLink;            // Link to transmit packet on
     packetBuffer outPacket; // packet to be sent
     while(1) {
+    	// scan incoming links for packets
 		switchStoreIncomingPackets(sstate);
 
         // If queue not empty, send next packet
