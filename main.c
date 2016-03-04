@@ -113,26 +113,36 @@ int main()
 
 			   printf("** main.c creating switch process: init. switch numLinks\n");
 			   // inti. number of switch's incident communication links
-			   switch_state.numInLinks = 3;
-			   switch_state.numOutLinks = 3;
 
 			   printf("** main.c creating switch process: init. switch links\n");
 			   int i,
 			   	   k;
 			   // find all links in links_array that belong in switch's outLinks array
 			   for (i=0, k=0; i < links_array.numlinks; i++) {
-			   	   /* Store index if an outgoing link is found */
-			   	   if (links_array.link[i].uniPipeInfo.src_physId == physid) {
+			   	   // if link in has src matching switch's physid, add that link to switch's outLinks
+				   int isLinkFromSwitchId = links_array.link[i].uniPipeInfo.src_physId == physid;
+			   	   if (isLinkFromSwitchId) {
+			   		   printf("** main.c switch get outLinks: adding link with src_physid = %d and dest_physid = %d to outLinks\n",
+			   				   links_array.link[i].uniPipeInfo.src_physId,
+							   links_array.link[i].uniPipeInfo.dest_physId);
 			   		   switch_state.outLinks[k] = links_array.link[i];
+
 			   		   k++;
+			   		   switch_state.numOutLinks++;
 			   	   }
 			   	}
 			   // find all links in links_array that belong in switch's inLinks array
 			   for (i=0, k=0; i < links_array.numlinks; i++) {
-				   /* Store index if an incoming link is found */
-				   if (links_array.link[i].uniPipeInfo.dest_physId == physid) {
+				   // if link in link_array has dest matching switch's physid, add that link to switch's inLinks
+				   int isLinkToSwitchId = links_array.link[i].uniPipeInfo.dest_physId == physid;
+				   if (isLinkToSwitchId) {
+					   printf("** main.c switch get outLinks: adding link with src_physid = %d and dest_physid = %d to inLinks\n",
+							   links_array.link[i].uniPipeInfo.src_physId,
+							   links_array.link[i].uniPipeInfo.dest_physId);
 					   switch_state.inLinks[k] = links_array.link[i];
+
 					   k++;
+					   switch_state.numInLinks++;
 				   }
 				}
 

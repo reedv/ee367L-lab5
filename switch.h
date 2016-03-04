@@ -39,8 +39,8 @@ typedef struct {
     int physid;
     int numInLinks;
     int numOutLinks;
-    LinkInfo * inLinks;      	// Unbouned array of incoming communication links
-    LinkInfo * outLinks;     	// Unbounded array of outgoing communication links
+    LinkInfo inLinks[10];  // CURRENT SIZES FOR LINK ARRAYS ARE ARBITRARY AND ONLT FOR TESTING
+    LinkInfo outLinks[10];
     ForwardingTable forwardingTable;
     PacketQueue packetQueue;
 } switchState;

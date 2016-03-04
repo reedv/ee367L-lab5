@@ -23,7 +23,6 @@ void switchInit(switchState * sstate, int physid) {
     sstate->numInLinks = 0;
     sstate->numOutLinks = 0;
 
-    printf("** switch.c/switchInit: init queue and table\n");
     tableInit(&(sstate->forwardingTable));
     queueInit(&(sstate->packetQueue));
 }

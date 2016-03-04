@@ -65,9 +65,55 @@ for switching nodes.
    		- can't put in mnager process, since disconects all links (since has direct connection to host)
    		** Going to try to add inti. of switch w/in for loop that inits. each host node
    			** BUG: After trying to add initalization of switch as a child process, net367 freezes when trying 
-   			to transmit packages between hosts.
+   			to initialize switch processes.
    				***TRY: commenting out block that inits. switch and just try connecting all 3 hosts and sending a 
    				packet from host1 to host2 to check likelyhood that problem is with the block initalizing the switch
+   				*** Setting the links in netSetNetworkTopology as shown below result in the printf statments for 
+   				switchMain appearing in stdout.
+   				
+   				linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
+				linkArray->link[0].uniPipeInfo.dest_physId = 1;  //       goes to host1
+				linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1
+				linkArray->link[1].uniPipeInfo.dest_physId = 0;  //       goes to host0
+				
+				The original link topology, for connecting 3 hosts to a single switch was...
+				
+				linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
+				linkArray->link[0].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+				
+				linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1
+				linkArray->link[1].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+			
+				linkArray->link[2].uniPipeInfo.src_physId = 2;   // link2 comes from host2
+				linkArray->link[2].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+				
+			
+				linkArray->link[3].uniPipeInfo.src_physId = 3;   // link3 comes from switch3
+				linkArray->link[3].uniPipeInfo.dest_physId = 0;  //       goes to host0
+				
+				linkArray->link[4].uniPipeInfo.src_physId = 3;   // link4 comes from switch3
+				linkArray->link[4].uniPipeInfo.dest_physId = 1;  //       goes to host1
+				
+				linkArray->link[5].uniPipeInfo.src_physId = 3;   // link5 comes from switch3
+				linkArray->link[5].uniPipeInfo.dest_physId = 2;  //       goes to host2
+				
+				Thus the problem may be with the way netSetNetworkTopology is currently implemented.
+				
+				*** NOTE: May have been a problem with not including an '\n' at the end of printf debug statements.
+				Can cause output from printf to be stored in a buffer rather than printing to stdout.
+				
+					**** RESOLVED: Changed inLinks and outLinks in switch.h from pointers to arrays. May have been
+					causing weird behavior when trying to set up links for switch process in main.c
+				
+			
+			
+			** BUG: After trying to add initalization of switch as a child process, net367 freezes when trying 
+   			to transmit packages between hosts.
+   				*** TODO: add tracing statements along execution of transmitting a packet from one host to another
+   				to see where program is stopping.
+	
+	
+	
    		** Use this seq. of commands to set up dirs for testing:
    			d 
 		   	f 
