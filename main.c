@@ -87,11 +87,13 @@ int main()
 			  // set host's link_out from linkArrayType
 			  k = netHostOutLink(&links_array, physid); /* Host's OUTGOING link (if any) */
 			  host_state.link_out = links_array.link[k];
-			  printf("** main.c host%d: link_out dest_physid = %d\n", host_state.link_out.uniPipeInfo.dest_physId);
+			  printf("** main.c host%d: link_out dest_physid = %d\n",
+					  physid, host_state.link_out.uniPipeInfo.dest_physId);
 			  // set host's link_in from linkArrayType
 			  k = netHostInLink(&links_array, physid); /* Host's INCOMING link (if any) */
 			  host_state.link_in = links_array.link[k];
-			  printf("** main.c host%d: link_in src_physid = %d\n", host_state.link_out.uniPipeInfo.src_physId);
+			  printf("** main.c host%d: link_in src_physid = %d\n",
+					  physid, host_state.link_out.uniPipeInfo.src_physId);
 			  printf("\n\n");
 
 			  /* Close all other links -- not incident to the host */
@@ -109,12 +111,12 @@ int main()
 			   // inti. switch's state
 			   switchInit(&switch_state, physid);
 
-			   printf("** main.c creating switch process: init. switch numLinks");
+			   printf("** main.c creating switch process: init. switch numLinks\n");
 			   // inti. number of switch's incident communication links
 			   switch_state.numInLinks = 3;
 			   switch_state.numOutLinks = 3;
 
-			   printf("** main.c creating switch process: init. switch links");
+			   printf("** main.c creating switch process: init. switch links\n");
 			   int i,
 			   	   k;
 			   // find all links in links_array that belong in switch's outLinks array
@@ -134,11 +136,11 @@ int main()
 				   }
 				}
 
-			   printf("** main.c creating switch process: closing nonincident links");
+			   printf("** main.c creating switch process: closing nonincident links\n");
 			   // close links not incident to the switch
 			   netCloseNonincidentLinks(&links_array, physid);
 
-			   printf("** main.c creating switch process: closing manager links");
+			   printf("** main.c creating switch process: closing manager links\n");
 			   // close manger links, since switches never connect to them
 			   int manLink;
 			   for (manLink=0; manLink < manager_links_array.numlinks; manLink++) {
@@ -149,7 +151,7 @@ int main()
 				   close(manager_links_array.links[manLink].fromHost[1]);
 			   }
 
-			   printf("** main.c creating switch process: starting switchMain loop");
+			   printf("** main.c creating switch process: starting switchMain loop\n");
 			   // go to main loop of switch node
 			   switchMain(&switch_state);
 		   }
