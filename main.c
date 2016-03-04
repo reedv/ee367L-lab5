@@ -43,6 +43,8 @@ int main()
 	/* Set the end nodes of the links
 	 * TODO: Change to have 3 hosts connected to a switch and a manager connected to a host*/
 	netSetNetworkTopology(& links_array);
+	linkDisplay(& links_array);
+	usleep(10000);  // to give time to fully print list before spawning processes
 
 	/* Create nodes and spawn their own processes, one process per node */
 	hostState host_state;   /* The host's state */
@@ -81,13 +83,13 @@ int main()
 			  netCloseConnections(& manager_links_array, physid);
 
 			  /* Initialize the host's incident communication links */
-			  int host_link_index;
+			  int k;
 			  // set host's link_out from linkArrayType
-			  host_link_index = netHostOutLink(&links_array, physid); /* Host's OUTGOING link (if any) */
-			  host_state.link_out = links_array.link[host_link_index];
+			  k = netHostOutLink(&links_array, physid); /* Host's OUTGOING link (if any) */
+			  host_state.link_out = links_array.link[k];
 			  // set host's link_in from linkArrayType
-			  host_link_index = netHostInLink(&links_array, physid); /* Host's INCOMING link (if any) */
-			  host_state.link_in = links_array.link[host_link_index];
+			  k = netHostInLink(&links_array, physid); /* Host's INCOMING link (if any) */
+			  host_state.link_in = links_array.link[k];
 
 			  /* Close all other links -- not incident to the host */
 			  netCloseNonincidentLinks(&links_array, physid);
@@ -105,7 +107,7 @@ int main()
 			   switchInit(&switch_state, physid);
 
 			   printf("** main.c creating switch process: init. switch numLinks");
-			   // inti. switch's incident communication links
+			   // inti. number of switch's incident communication links
 			   switch_state.numInLinks = 3;
 			   switch_state.numOutLinks = 3;
 

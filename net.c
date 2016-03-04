@@ -86,15 +86,15 @@ void netCreateConnections(manLinkArrayType * manLinkArray)
 void netCreateLinks(linkArrayType * linkArray)
 { 
 	// populate linkArray with links
-	int link_index;
-	for (link_index=0; link_index < linkArray->numlinks; link_index++) {
+	int i;
+	for (i=0; i < linkArray->numlinks; i++) {
 	   // set link info
-	   linkArray->link[link_index].linkID = link_index;
-	   linkArray->link[link_index].linkType = UNIPIPE;
-	   linkArray->link[link_index].uniPipeInfo.pipeType = NONBLOCKING;
+	   linkArray->link[i].linkID = i;
+	   linkArray->link[i].linkType = UNIPIPE;
+	   linkArray->link[i].uniPipeInfo.pipeType = NONBLOCKING;
 
 	   // set pipe filedes for the link
-	   linkCreate(&(linkArray->link[link_index]));
+	   linkCreate(&(linkArray->link[i]));
 	}
 }
 
@@ -135,23 +135,24 @@ void netSetNetworkTopology(linkArrayType * linkArray)
 	linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
 	linkArray->link[0].uniPipeInfo.dest_physId = 3;  //       goes to switch3
 
-	linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1
-	linkArray->link[1].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+	linkArray->link[1].uniPipeInfo.src_physId = 3;   // link1 comes from switch3
+	linkArray->link[1].uniPipeInfo.dest_physId = 0;  //       goes to host0
 
-	linkArray->link[2].uniPipeInfo.src_physId = 2;   // link2 comes from host2
+
+	linkArray->link[2].uniPipeInfo.src_physId = 1;   // link2 comes from host1
 	linkArray->link[2].uniPipeInfo.dest_physId = 3;  //       goes to switch3
 
-
 	linkArray->link[3].uniPipeInfo.src_physId = 3;   // link3 comes from switch3
-	linkArray->link[3].uniPipeInfo.dest_physId = 0;  //       goes to host0
+	linkArray->link[3].uniPipeInfo.dest_physId = 1;  //       goes to host1
 
-	linkArray->link[4].uniPipeInfo.src_physId = 3;   // link4 comes from switch3
-	linkArray->link[4].uniPipeInfo.dest_physId = 1;  //       goes to host1
+
+	linkArray->link[4].uniPipeInfo.src_physId = 2;   // link4 comes from host2
+	linkArray->link[4].uniPipeInfo.dest_physId = 3;  //       goes to switch3
 
 	linkArray->link[5].uniPipeInfo.src_physId = 3;   // link5 comes from switch3
 	linkArray->link[5].uniPipeInfo.dest_physId = 2;  //       goes to host2
 
-	// uncomment for testing
+	// uncomment for testing: CONNECTS 2 HOST TOGETHER, SO NEED TO CHANGE man.h/NUMHOSTS AND link.h/NUMLINKS
 //	linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
 //	linkArray->link[0].uniPipeInfo.dest_physId = 1;  //       goes to host1
 //	linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1

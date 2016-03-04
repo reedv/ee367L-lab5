@@ -40,3 +40,6 @@ int linkClear(LinkInfo * link);
 /* Initializes a link */
 int linkCreate(LinkInfo * link);
 
+// display info of links in link_array for debugging purposes
+void linkDisplay(linkArrayType * link_array);
+

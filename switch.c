@@ -42,6 +42,7 @@ void queueInit(PacketQueue * pqueue) {
 
 void switchMain(switchState * sstate)
 {
+	printf("** switch.c/switchMain: entered");
     int outLink;            // Link to transmit packet on
     packetBuffer outPacket; // packet to be sent
     while(1) {

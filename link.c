@@ -240,3 +240,14 @@ int linkSend(LinkInfo * link, packetBuffer * pbuff) {
 	printf("Link %d transmitted\n",link->linkID);
 }
 
+void linkDisplay(linkArrayType * link_array) {
+	printf("** link.c/linkDisplay\n");
+	int i;
+	for(i=0; i < link_array->numlinks; i++) {
+		printf("** link #: %d\n", i);
+		printf("** src_physId: %d\n", link_array->link[i].uniPipeInfo.src_physId);
+		printf("** dest_physId: %d\n", link_array->link[i].uniPipeInfo.dest_physId);
+	}
+	printf("\n\n");
+}
+
