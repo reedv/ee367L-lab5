@@ -157,8 +157,70 @@ for switching nodes.
 					    ***** NOTE: still don't know why the table looks the way it does at the end (see log file).
 					    This may be the reason that host are never actually seeing the packets that switch is 
 					    sending out.
-					    
-				    *** TODO: run test again with added logging statements and walk thru resulting log
+					    	****** Was a misunderstanding about how the table works. The linkout# is the index
+					    	in the switch's outgoing links array used to get to the destination in the entry
+					    	as the linkout#.
+				    
+				    *** Initially table unpopulated so SHOULD send to ALL links when transmitting the first packet.
+				    However, when transmitting to a specific addr, onyl the intended host actually seems to receive 
+				    the packet in its buffer (even tho log shows packet being sent on all of the switch's outgoing links,
+				    except fot the approprite source link). Also, still can't send to ALL when using a nonvalid 
+				    desttination addr.
+				    	**** Mabye the hosts check each packet they get
+				    		***** RESOLVED: In host.c/hostMain, the hosts were checking that the packet's dest_addr
+				    		matched the current host's netaddr (set to their physid by default). So even tho a
+				    		host link would receive a packet, it would not read the packet into the hosts buffer
+				    		unless the packet was actually meant for that host. 
+				    		See Logs/switch_sendToAll_uncommentHostAddrMatchingHostMain
+				    		
+				    *** Use this seq. to test
+				    d 
+				   	f 
+				   	h 
+				   	m 
+				   	TestDir0 
+				   	c 
+				   	1 
+				   	m 
+				   	TestDir1
+				   	c
+				   	2
+				   	m
+				   	TestDir2
+				   	u
+				   	testmsg2
+				   	t
+				   	0
+				   	c
+				   	0
+				   	f
+				   	u
+				   	testmsg0
+				   	t
+				   	1
+				   	c
+				   	1
+				   	f
+				   	u
+				   	testmsg1
+				   	t
+				   	2
+				   	c
+				   	2
+				   	f
+				   	c
+				   	1
+				   	t
+				   	2
+				   	c
+				   	2
+				   	f
+				   	c
+				   	1
+				   	t
+				   	456
+				   	
+					
 	
 	
 	

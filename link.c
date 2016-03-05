@@ -115,6 +115,8 @@ int linkReceive(LinkInfo * link, packetBuffer * pbuff)
 	if (link->linkType==UNIPIPE) {
 	   n = read(link->uniPipeInfo.pipe_filedes[PIPE_READ], buffer, 1000);
 	   if (n > 0) {
+		   LOG_PRINT("** link.c/linkReceive: packet from link src_addr=%d received at link dest_addr=%d\n",
+				   link->uniPipeInfo.src_physId, link->uniPipeInfo.dest_physId);
 		  /*
 		   * Something is received on link.
 		   * Store it in the packet buffer
@@ -153,7 +155,7 @@ int linkReceive(LinkInfo * link, packetBuffer * pbuff)
 
 		  pbuff->payload[k] = '\0';
 		  pbuff->is_valid=1;
-		  pbuff->new=1;
+		  pbuff->new=1;		// mark packet as newly received
 	   } /* end of if */
 
 	   else { /* Not a packet */

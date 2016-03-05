@@ -41,6 +41,7 @@
 #include "link.h"
 #include "man.h"
 #include "host.h"
+#include "logger.h"
 
 #define EMPTY_ADDR  0xffff  /* Indicates that the empty address */
                              /* It also indicates that the broadcast address */
@@ -227,13 +228,17 @@ void hostMain(hostState * hstate)
 	   linkReceive(&(hstate->link_in), &tmpPacket);
 
 	   /*
-		* If there is a packet and if the packet's destination address
-		* is the host's network address then store the packet in the
-		* receive packet buffer
+		* If there is a packet and
+		* if the packet's destination address is the host's network address (i.e. the packet is meant for this host)
+		* and the packet is valid
+		* and the packet is newly received
+		* then store the packet in the receive packet buffer
 		*/
-	   if (tmpPacket.dest_addr == hstate->netaddr &&
+	   if (/*tmpPacket.dest_addr == hstate->netaddr &&*/  //comment this part of bool to have switch send to all hosts for unspecified addrs
 			   tmpPacket.is_valid == 1 &&
 			   tmpPacket.new == 1) {
+		  LOG_PRINT("** host.c/hostMain: packet with src_addr=%d and dest_addr=%d stored in hostid=%d buffer\n",
+				  tmpPacket.src_addr, tmpPacket.dest_addr, hstate->physid);
 		  hstate->rcvPacketBuff = tmpPacket;
 		  hstate->rcvPacketBuff.new = 1;
 		  hstate->rcvPacketBuff.is_valid = 1;

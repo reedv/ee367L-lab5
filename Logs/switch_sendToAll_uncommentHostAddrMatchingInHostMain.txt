@@ -1,0 +1,354 @@
+Sat Mar  5 12:45:40 2016 ** link.c/linkDisplay
+ [link.c][line: 247] 
+Sat Mar  5 12:45:40 2016 ** link #: 0
+ [link.c][line: 250] 
+Sat Mar  5 12:45:40 2016 ** src_physId: 0
+ [link.c][line: 251] 
+Sat Mar  5 12:45:40 2016 ** dest_physId: 3
+ [link.c][line: 252] 
+Sat Mar  5 12:45:40 2016 ** link #: 1
+ [link.c][line: 250] 
+Sat Mar  5 12:45:40 2016 ** src_physId: 3
+ [link.c][line: 251] 
+Sat Mar  5 12:45:40 2016 ** dest_physId: 0
+ [link.c][line: 252] 
+Sat Mar  5 12:45:40 2016 ** link #: 2
+ [link.c][line: 250] 
+Sat Mar  5 12:45:40 2016 ** src_physId: 1
+ [link.c][line: 251] 
+Sat Mar  5 12:45:40 2016 ** dest_physId: 3
+ [link.c][line: 252] 
+Sat Mar  5 12:45:40 2016 ** link #: 3
+ [link.c][line: 250] 
+Sat Mar  5 12:45:40 2016 ** src_physId: 3
+ [link.c][line: 251] 
+Sat Mar  5 12:45:40 2016 ** dest_physId: 1
+ [link.c][line: 252] 
+Sat Mar  5 12:45:40 2016 ** link #: 4
+ [link.c][line: 250] 
+Sat Mar  5 12:45:40 2016 ** src_physId: 2
+ [link.c][line: 251] 
+Sat Mar  5 12:45:40 2016 ** dest_physId: 3
+ [link.c][line: 252] 
+Sat Mar  5 12:45:40 2016 ** link #: 5
+ [link.c][line: 250] 
+Sat Mar  5 12:45:40 2016 ** src_physId: 3
+ [link.c][line: 251] 
+Sat Mar  5 12:45:40 2016 ** dest_physId: 2
+ [link.c][line: 252] 
+Sat Mar  5 12:45:40 2016 ** main.c process-spawning loop physid = 0 
+ [main.c][line: 57] 
+Sat Mar  5 12:45:40 2016 ** main.c process-spawning loop physid = 1 
+ [main.c][line: 57] 
+Sat Mar  5 12:45:40 2016 ** main.c creating host process: physid = 0
+ [main.c][line: 70] 
+Sat Mar  5 12:45:40 2016 ** main.c process-spawning loop physid = 2 
+ [main.c][line: 57] 
+Sat Mar  5 12:45:40 2016 ** main.c host0: link_out dest_physid = 3
+ [main.c][line: 92] 
+Sat Mar  5 12:45:40 2016 ** main.c creating host process: physid = 1
+ [main.c][line: 70] 
+Sat Mar  5 12:45:40 2016 ** main.c process-spawning loop physid = 3 
+ [main.c][line: 57] 
+Sat Mar  5 12:45:40 2016 ** main.c host0: link_in src_physid = 0
+ [main.c][line: 97] 
+Sat Mar  5 12:45:40 2016 ** main.c creating host process: physid = 2
+ [main.c][line: 70] 
+Sat Mar  5 12:45:40 2016 ** main.c host1: link_out dest_physid = 3
+ [main.c][line: 92] 
+Sat Mar  5 12:45:40 2016 
+
+ [main.c][line: 98] 
+Sat Mar  5 12:45:40 2016 ** main.c host2: link_out dest_physid = 3
+ [main.c][line: 92] 
+Sat Mar  5 12:45:40 2016 ** main.c host1: link_in src_physid = 1
+ [main.c][line: 97] 
+Sat Mar  5 12:45:40 2016 ** main.c creating switch process: physid = 3
+ [main.c][line: 110] 
+Sat Mar  5 12:45:40 2016 
+
+ [main.c][line: 98] 
+Sat Mar  5 12:45:40 2016 ** main.c host2: link_in src_physid = 2
+ [main.c][line: 97] 
+Sat Mar  5 12:45:40 2016 ** switch.c/switchInit: entered
+ [switch.c][line: 22] 
+Sat Mar  5 12:45:40 2016 
+
+ [main.c][line: 98] 
+Sat Mar  5 12:45:40 2016 ** main.c creating switch process: init. switch links
+ [main.c][line: 115] 
+Sat Mar  5 12:45:40 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 0 and dest_physid = 3 to inLinks[0]
+ [switch.c][line: 54] 
+Sat Mar  5 12:45:40 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 1 and dest_physid = 3 to inLinks[1]
+ [switch.c][line: 54] 
+Sat Mar  5 12:45:40 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 2 and dest_physid = 3 to inLinks[2]
+ [switch.c][line: 54] 
+Sat Mar  5 12:45:40 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 0 to outLinks[0]
+ [switch.c][line: 69] 
+Sat Mar  5 12:45:40 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 1 to outLinks[1]
+ [switch.c][line: 69] 
+Sat Mar  5 12:45:40 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 2 to outLinks[2]
+ [switch.c][line: 69] 
+Sat Mar  5 12:45:40 2016 ** main.c creating switch process: closing nonincidental links
+ [main.c][line: 119] 
+Sat Mar  5 12:45:40 2016 ** main.c creating switch process: closing manager links
+ [main.c][line: 123] 
+Sat Mar  5 12:45:40 2016 ** main.c creating switch process: starting switchMain loop
+ [main.c][line: 127] 
+Sat Mar  5 12:45:40 2016 ** switch.c/switchMain: entered
+ [switch.c][line: 81] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 4 transmitted from src=2 to dest=3
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=2 received at link dest_addr=3
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchStorIncomingPackets: pushing packet bound for dest=0 in queue
+ [switch.c][line: 117] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePush: entered
+ [switch.c][line: 161] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePush: packet with src_addr=2 and dest_addr=0 added to queue
+ [switch.c][line: 168] 
+Sat Mar  5 12:45:50 2016 SourceAddress	DestAddress	Length	Payload
+ [switch.c][line: 209] 
+Sat Mar  5 12:45:50 2016 2				0				19	hello from TestDir2
+ [switch.c][line: 215] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdate: entered
+ [switch.c][line: 228] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdate: adding entry: valid=1, dest_addr=2, linkOut=2
+ [switch.c][line: 237] 
+Sat Mar  5 12:45:50 2016 Valid	DestinationAddress	LinkOut# (to destination)
+ [switch.c][line: 305] 
+Sat Mar  5 12:45:50 2016 1		2					2
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePop: entered
+ [switch.c][line: 183] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePop: packet with src_addr=2 and dest_addr=0 popped from queue
+ [switch.c][line: 190] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableGetOutLink: table_index=-1 found for destination addr=0
+ [switch.c][line: 279] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: entered, processing outPacket with src_addr=2 and dest_addr=0
+ [switch.c][line: 130] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableGetOutLink: table_index=0 found for destination addr=2
+ [switch.c][line: 279] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: sending packet on all outLinks, except outLinks[2]
+ [switch.c][line: 142] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: sending outPacket on outLinks[0]
+ [switch.c][line: 147] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 1 transmitted from src=3 to dest=0
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: sending outPacket on outLinks[1]
+ [switch.c][line: 147] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 3 transmitted from src=3 to dest=1
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=3 received at link dest_addr=1
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=3 received at link dest_addr=0
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** host.c/hostMain: packet with src_addr=2 and dest_addr=0 stored in hostid=0 buffer
+ [host.c][line: 241] 
+Sat Mar  5 12:45:50 2016 ** host.c/hostMain: packet with src_addr=2 and dest_addr=0 stored in hostid=1 buffer
+ [host.c][line: 241] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 0 transmitted from src=0 to dest=3
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=0 received at link dest_addr=3
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchStorIncomingPackets: pushing packet bound for dest=1 in queue
+ [switch.c][line: 117] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePush: entered
+ [switch.c][line: 161] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePush: packet with src_addr=0 and dest_addr=1 added to queue
+ [switch.c][line: 168] 
+Sat Mar  5 12:45:50 2016 SourceAddress	DestAddress	Length	Payload
+ [switch.c][line: 209] 
+Sat Mar  5 12:45:50 2016 0				1				53	Hi, this is a test
+message from Directory 0.
+Aloha!
+
+
+ [switch.c][line: 215] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdate: entered
+ [switch.c][line: 228] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdate: adding entry: valid=1, dest_addr=0, linkOut=0
+ [switch.c][line: 237] 
+Sat Mar  5 12:45:50 2016 Valid	DestinationAddress	LinkOut# (to destination)
+ [switch.c][line: 305] 
+Sat Mar  5 12:45:50 2016 1		2					2
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 1		0					0
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePop: entered
+ [switch.c][line: 183] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePop: packet with src_addr=0 and dest_addr=1 popped from queue
+ [switch.c][line: 190] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableGetOutLink: table_index=-1 found for destination addr=1
+ [switch.c][line: 279] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: entered, processing outPacket with src_addr=0 and dest_addr=1
+ [switch.c][line: 130] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableGetOutLink: table_index=1 found for destination addr=0
+ [switch.c][line: 279] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: sending packet on all outLinks, except outLinks[0]
+ [switch.c][line: 142] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: sending outPacket on outLinks[1]
+ [switch.c][line: 147] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 3 transmitted from src=3 to dest=1
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: sending outPacket on outLinks[2]
+ [switch.c][line: 147] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=3 received at link dest_addr=1
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** host.c/hostMain: packet with src_addr=0 and dest_addr=1 stored in hostid=1 buffer
+ [host.c][line: 241] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 5 transmitted from src=3 to dest=2
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=3 received at link dest_addr=2
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** host.c/hostMain: packet with src_addr=0 and dest_addr=1 stored in hostid=2 buffer
+ [host.c][line: 241] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 2 transmitted from src=1 to dest=3
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=1 received at link dest_addr=3
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchStorIncomingPackets: pushing packet bound for dest=2 in queue
+ [switch.c][line: 117] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePush: entered
+ [switch.c][line: 161] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePush: packet with src_addr=1 and dest_addr=2 added to queue
+ [switch.c][line: 168] 
+Sat Mar  5 12:45:50 2016 SourceAddress	DestAddress	Length	Payload
+ [switch.c][line: 209] 
+Sat Mar  5 12:45:50 2016 1				2				47	Aloha,
+This is from directory 1.  
+Hello world
+
+ [switch.c][line: 215] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdate: entered
+ [switch.c][line: 228] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdate: adding entry: valid=1, dest_addr=1, linkOut=1
+ [switch.c][line: 237] 
+Sat Mar  5 12:45:50 2016 Valid	DestinationAddress	LinkOut# (to destination)
+ [switch.c][line: 305] 
+Sat Mar  5 12:45:50 2016 1		2					2
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 1		0					0
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 1		1					1
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePop: entered
+ [switch.c][line: 183] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePop: packet with src_addr=1 and dest_addr=2 popped from queue
+ [switch.c][line: 190] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableGetOutLink: table_index=0 found for destination addr=2
+ [switch.c][line: 279] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: entered, processing outPacket with src_addr=1 and dest_addr=2
+ [switch.c][line: 130] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: sending packet to specific dest=2
+ [switch.c][line: 134] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 5 transmitted from src=3 to dest=2
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=3 received at link dest_addr=2
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** host.c/hostMain: packet with src_addr=1 and dest_addr=2 stored in hostid=2 buffer
+ [host.c][line: 241] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 2 transmitted from src=1 to dest=3
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=1 received at link dest_addr=3
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchStorIncomingPackets: pushing packet bound for dest=2 in queue
+ [switch.c][line: 117] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePush: entered
+ [switch.c][line: 161] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePush: packet with src_addr=1 and dest_addr=2 added to queue
+ [switch.c][line: 168] 
+Sat Mar  5 12:45:50 2016 SourceAddress	DestAddress	Length	Payload
+ [switch.c][line: 209] 
+Sat Mar  5 12:45:50 2016 1				2				47	Aloha,
+This is from directory 1.  
+Hello world
+
+ [switch.c][line: 215] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdate: entered
+ [switch.c][line: 228] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdate: updating entry at dest_addr=1: valid=1, linkOut=1
+ [switch.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableUpdateEntry: entry at table index=2 updated to valid=D linkOutNum=1 [switch.c][line: 267] 
+Sat Mar  5 12:45:50 2016 Valid	DestinationAddress	LinkOut# (to destination)
+ [switch.c][line: 305] 
+Sat Mar  5 12:45:50 2016 1		2					2
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 1		0					0
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 1		1					1
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePop: entered
+ [switch.c][line: 183] 
+Sat Mar  5 12:45:50 2016 ** switch.c/queuePop: packet with src_addr=1 and dest_addr=2 popped from queue
+ [switch.c][line: 190] 
+Sat Mar  5 12:45:50 2016 ** switch.c/tableGetOutLink: table_index=0 found for destination addr=2
+ [switch.c][line: 279] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: entered, processing outPacket with src_addr=1 and dest_addr=2
+ [switch.c][line: 130] 
+Sat Mar  5 12:45:50 2016 ** switch.c/switchSendOutPacket: sending packet to specific dest=2
+ [switch.c][line: 134] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkSend: Link 5 transmitted from src=3 to dest=2
+ [link.c][line: 243] 
+Sat Mar  5 12:45:50 2016 ** link.c/linkReceive: packet from link src_addr=3 received at link dest_addr=2
+ [link.c][line: 119] 
+Sat Mar  5 12:45:50 2016 ** host.c/hostMain: packet with src_addr=1 and dest_addr=2 stored in hostid=2 buffer
+ [host.c][line: 241] 
+Sat Mar  5 12:45:51 2016 ** link.c/linkSend: Link 2 transmitted from src=1 to dest=3
+ [link.c][line: 243] 
+Sat Mar  5 12:45:51 2016 ** link.c/linkReceive: packet from link src_addr=1 received at link dest_addr=3
+ [link.c][line: 119] 
+Sat Mar  5 12:45:51 2016 ** switch.c/switchStorIncomingPackets: pushing packet bound for dest=456 in queue
+ [switch.c][line: 117] 
+Sat Mar  5 12:45:51 2016 ** switch.c/queuePush: entered
+ [switch.c][line: 161] 
+Sat Mar  5 12:45:51 2016 ** switch.c/queuePush: packet with src_addr=1 and dest_addr=456 added to queue
+ [switch.c][line: 168] 
+Sat Mar  5 12:45:51 2016 SourceAddress	DestAddress	Length	Payload
+ [switch.c][line: 209] 
+Sat Mar  5 12:45:51 2016 1				456				47	Aloha,
+This is from directory 1.  
+Hello world
+
+ [switch.c][line: 215] 
+Sat Mar  5 12:45:51 2016 ** switch.c/tableUpdate: entered
+ [switch.c][line: 228] 
+Sat Mar  5 12:45:51 2016 ** switch.c/tableUpdate: updating entry at dest_addr=1: valid=1, linkOut=1
+ [switch.c][line: 243] 
+Sat Mar  5 12:45:51 2016 ** switch.c/tableUpdateEntry: entry at table index=2 updated to valid=D linkOutNum=1 [switch.c][line: 267] 
+Sat Mar  5 12:45:51 2016 Valid	DestinationAddress	LinkOut# (to destination)
+ [switch.c][line: 305] 
+Sat Mar  5 12:45:51 2016 1		2					2
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:51 2016 1		0					0
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:51 2016 1		1					1
+ [switch.c][line: 313] 
+Sat Mar  5 12:45:51 2016 ** switch.c/queuePop: entered
+ [switch.c][line: 183] 
+Sat Mar  5 12:45:51 2016 ** switch.c/queuePop: packet with src_addr=1 and dest_addr=456 popped from queue
+ [switch.c][line: 190] 
+Sat Mar  5 12:45:51 2016 ** switch.c/tableGetOutLink: table_index=-1 found for destination addr=456
+ [switch.c][line: 279] 
+Sat Mar  5 12:45:51 2016 ** switch.c/switchSendOutPacket: entered, processing outPacket with src_addr=1 and dest_addr=456
+ [switch.c][line: 130] 
+Sat Mar  5 12:45:51 2016 ** switch.c/tableGetOutLink: table_index=2 found for destination addr=1
+ [switch.c][line: 279] 
+Sat Mar  5 12:45:51 2016 ** switch.c/switchSendOutPacket: sending packet on all outLinks, except outLinks[1]
+ [switch.c][line: 142] 
+Sat Mar  5 12:45:51 2016 ** switch.c/switchSendOutPacket: sending outPacket on outLinks[0]
+ [switch.c][line: 147] 
+Sat Mar  5 12:45:51 2016 ** link.c/linkSend: Link 1 transmitted from src=3 to dest=0
+ [link.c][line: 243] 
+Sat Mar  5 12:45:51 2016 ** switch.c/switchSendOutPacket: sending outPacket on outLinks[2]
+ [switch.c][line: 147] 
+Sat Mar  5 12:45:51 2016 ** link.c/linkSend: Link 5 transmitted from src=3 to dest=2
+ [link.c][line: 243] 
+Sat Mar  5 12:45:51 2016 ** link.c/linkReceive: packet from link src_addr=3 received at link dest_addr=0
+ [link.c][line: 119] 
+Sat Mar  5 12:45:51 2016 ** link.c/linkReceive: packet from link src_addr=3 received at link dest_addr=2
+ [link.c][line: 119] 
+Sat Mar  5 12:45:51 2016 ** host.c/hostMain: packet with src_addr=1 and dest_addr=456 stored in hostid=0 buffer
+ [host.c][line: 241] 
+Sat Mar  5 12:45:51 2016 ** host.c/hostMain: packet with src_addr=1 and dest_addr=456 stored in hostid=2 buffer
+ [host.c][line: 241] 
