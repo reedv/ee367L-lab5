@@ -52,7 +52,6 @@ void switchSetupLinks(switchState * sstate, linkArrayType * links_array) {
 					   links_array->link[i].uniPipeInfo.src_physId,
 					   links_array->link[i].uniPipeInfo.dest_physId);
 			   sstate->inLinks[k] = links_array->link[i];
-
 			   sstate->numInLinks++;
 			   k++;
 		   }
@@ -67,7 +66,6 @@ void switchSetupLinks(switchState * sstate, linkArrayType * links_array) {
 				   links_array->link[i].uniPipeInfo.src_physId,
 				   links_array->link[i].uniPipeInfo.dest_physId);
 		   sstate->outLinks[k] = links_array->link[i];
-
 		   sstate->numOutLinks++;
 		   k++;
 	   }
@@ -77,8 +75,7 @@ void switchSetupLinks(switchState * sstate, linkArrayType * links_array) {
 
 
 
-void switchMain(switchState * sstate)
-{
+void switchMain(switchState * sstate) {
 	LOG_PRINT("** switch.c/switchMain: entered\n");
     int outLink;            // Link to transmit packet on
     packetBuffer outPacket; // packet to be sent
@@ -94,7 +91,7 @@ void switchMain(switchState * sstate)
             // Check ForwardingTable for outgoing link
             outLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.dest_addr);
 
-            // If incoming addr of packet to be sent exists
+            // If incoming addr of packet to be sent actually exists
             if (outPacket.src_addr != -1) {
             	// send packet to dest_addr or to all
             	switchSendOutPacket(outPacket, outLink, sstate);
@@ -107,41 +104,44 @@ void switchMain(switchState * sstate)
 }
 
 void switchStoreIncomingPackets(switchState* sstate) {
-	//printf("\n** switch.c/switchStoreIncomingPackets\n");
-	int inLink_index;
+	int i;
 	packetBuffer tmpPacket;
 	// Check all incoming links for arriving packets
-	for (inLink_index = 0; inLink_index < sstate->numInLinks; inLink_index++) {
+	for (i = 0; i < sstate->numInLinks; i++) {
 		// Check link for packets
-		linkReceive(&(sstate->inLinks[inLink_index]), &tmpPacket);
+		linkReceive(&(sstate->inLinks[i]), &tmpPacket);
 		// Put packet in PacketQueue
 		if (tmpPacket.is_valid == 1) {
+			LOG_PRINT("** switch.c/switchStorIncomingPackets: pushing packet bound for dest=%d in queue\n", tmpPacket.dest_addr);
 			queuePush(&(sstate->packetQueue), tmpPacket);
+
 			// Update ForwardingTable
 			tableUpdate(&(sstate->forwardingTable),
-					tmpPacket.is_valid, tmpPacket.src_addr, inLink_index);
+					tmpPacket.is_valid, tmpPacket.src_addr, i);
+			tableDisplay(&(sstate->forwardingTable));
 		}
 	}
 }
 
 void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate) {
-	//printf("\n** switch.c/switchSendOutPacket\n");
-	// If outgoing link from ForwardingTable exists
+	// If outgoing link from ForwardingTable actually exists
 	if (outLink != -1) {
 		// Send packet along the outgoing link
+		LOG_PRINT("** switch.c/switchSendOutPacket: sending packet to specific dest=%d\n", outPacket.dest_addr);
 		linkSend(&(sstate->outLinks[outLink]), &outPacket);
 	}
 	// Else send to all links except for the incoming link packet was received on
 	else {
-		// Get source link of packet to be sent
-		int inLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.src_addr);
-		// For all outgoing links
-		int outLink_index;
-		for (outLink_index = 0; outLink_index < sstate->numOutLinks;
-				outLink_index++) {
+		LOG_PRINT("** switch.c/switchSendOutPacket: sending packet on all outLinks\n");
+		// Get source link of packet to be sent (to avoid using as a destination for the packet)
+		//    even if src_addr of packet not yet in table's destination addrs, then will be -1 and skipped
+		int srcLink = tableGetOutLink(&(sstate->forwardingTable), outPacket.src_addr);
+
+		int i;
+		for (i = 0; i < sstate->numOutLinks; i++) {
 			// Send on link so long as its not the incoming link
-			if (outLink_index != inLink)
-				linkSend(&(sstate->outLinks[outLink_index]), &outPacket);
+			if (i != srcLink)
+				linkSend(&(sstate->outLinks[i]), &outPacket);
 		}
 	}
 }
@@ -182,8 +182,7 @@ packetBuffer queuePop(PacketQueue * pqueue)
     }
     else {
         printf("Error: packetQueue is empty\n");
-    }  /*TODO: OK to return nothing here?
-     	 Only used in switchMain and tableGetOutLink may take care of this there.*/
+    }
 }
 
 int queueIsEmpty(PacketQueue * pqueue) {
@@ -249,28 +248,32 @@ void tableUpdateEntry(ForwardingTable * ftable, int table_index,
 
 
 
-// Retrieve the value of the out link
+// Retrieve the value of the out link for the given dest_addr of an outgoing packet in the table
 int tableGetOutLink(ForwardingTable * ftable, int dest_addr) {
     int table_index;
     int linkOut;
 
+    // find index in table with the given addr
     table_index = tableEntryIndex(ftable, dest_addr);
+    LOG_PRINT("** switch.c/tableGetOutLink: table_index=%d for dest_addr=%d\n", table_index, dest_addr);
 
     if(table_index == -1)
         return table_index;
     else {
+    	// if entry with given addr was found, return entry's linkOut number
         linkOut = ftable->entries[table_index].linkOut;
         return linkOut;
     }
 }
 
-// Find the index of an entry in the table
+// Find the index of an entry in the table with the given addr
 int tableEntryIndex(ForwardingTable * ftable, int dest_addr) {
-    int table_index;
-    for(table_index=0; table_index < ftable->size; table_index++) {
-        if(ftable->entries[table_index].dest_addr == dest_addr)
-            return table_index;
+    int i;
+    for(i=0; i < ftable->size; i++) {
+        if(ftable->entries[i].dest_addr == dest_addr)
+            return i;
     }
+    // if entry w/ given addr not found
     return -1;
 }
 
@@ -278,12 +281,12 @@ int tableEntryIndex(ForwardingTable * ftable, int dest_addr) {
 
 // for debugging
 void tableDisplay(ForwardingTable * ftable) {
-    printf("Valid\tDestination Address\tLink Out #\n");
+    LOG_PRINT("Valid\tDestinationAddress\tLinkOut#\n");
 
     int i;
     for(i=0; i<ftable->size; i++)
     {
-        printf("%d\t%d\t\t\t%d\n",
+        LOG_PRINT("%d\t\t%d\t\t\t\t\t%d\n",
         		ftable->entries[i].valid,
 				ftable->entries[i].dest_addr,
 				ftable->entries[i].linkOut);

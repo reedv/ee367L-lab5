@@ -54,11 +54,11 @@ int main()
 	int physid; 		/* Physical ID of host */
 	// init. each host
 	for (physid = 0; physid < NUMHOSTS+NUMSWITCHES; physid++) {
-	   LOG_PRINT("** physid = %d \n", physid);
+	   LOG_PRINT("** main.c process-spawning loop physid = %d \n", physid);
 	   process_id = fork();
 
 	   if (process_id == -1) {
-		  LOG_PRINT("Error: the fork() failed\n");
+		  printf("Error: the fork() failed\n");
 		  return 0;
 	   }
 	   else if (process_id == 0) {

@@ -119,9 +119,44 @@ for switching nodes.
 			** BUG: Seem to be able to successfully transmit packets from switch to another specified host, but
 			unable to transmit from switch to ALL other connected hosts.
 			** ALSO: Whether sending to a specified host or to some invalid host (in an attempt to get switch to
-			send to ALL hosts), the link.c/linkSend printf trace statement appears to send to all host regardless
-			even though the host don't appear to actually be getting anything in the case of trying to send to all.
-				*** TRY:
+			send to ALL hosts), the link.c/linkSend printf trace statement appears to send to all host, regardless,
+			even though the hosts don't appear to actually be getting anything in the case of trying to send to all.
+			e.g. if sending packet from host1 to host0, printf says sending to host0 and host2, even though only
+			host0 will flag anything as being in its receive buffer.
+				*** SEE: table entry values seem to change between calling tableEntryIndex in switch.c/switchMain 
+				and switch.c/switchSendOutpacket (see log_BUG_changingTable.txt).
+					**** TRY: See if entries are being stored correctly when initially storing incoming packets
+					in the switch.
+					
+				*** HYPOTH.: Mabye unable to send to all because all the host need to first send send something to the switch
+				first before being added to the switch's forwarding table of possible desintations.
+					**** TEST: 
+				*** HYPOTH.: Mabye switch is sending to all outLinks b/c, AT FIRST, the it's forwarding table is 
+				not populated, so when trying to find index, it will be -1 if the host at the desired destination
+				addr has not yet interacted with the table and been added as an entry in it. Thus, when we call
+				switch.c/switchSendOutPacket we are able to avoid sending to the host that just sent the packet
+				(since it has already interacted with the forwarding table and thus been added to it), but the 
+				packet is sent to all other outgoing links of the switch b/c we are iterating thru its outLinks
+				(rather than the table).
+					*** NOTE: still does not explain how sending from, say, host1 to host2, at startup works 
+					as expected even tho link.c/linkSend LOG_PRINTs the packet being sent to host0 and host2.
+					**** TEST: For each host, use the manager to send a packet to another host (which will have to 
+					go thru the switch), adding that sending host to the switch's table. Then try to use the table 
+					like normal to se if it will then behave as expected.
+						***** RESULTS: Seems to work as expected. However, when actually using the manager to 
+						change to the hosts, they DO NOT appear to flag any new packets:
+						Sent a packet from host1 to host2
+									  from host2 to host0
+									  from host0 to host1
+					    then cleared receiving buffers for all hosts
+					    then sent packet from host1 to host2 -> logged packet being sent only to host2
+					    then cleared all buffers fo all hosts
+					    then sent packet from host1 to addr 456 -> logged packet being sent to host0 and host2
+					    
+					    ***** LOG: saved log file as Logs/emptyInitialTable_BUG.txt
+					    ***** NOTE: still don't know why the table looks the way it does at the end (see log file).
+					    This may be the reason that host are never actually seeing the packets that switch is 
+					    sending out.
 	
 	
 	

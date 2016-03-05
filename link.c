@@ -184,12 +184,10 @@ int linkSend(LinkInfo * link, packetBuffer * pbuff) {
 	   printf("packet invalid\n");
 	   return -1;
 	}
-
 	if (pbuff->length > PAYLOAD_LENGTH) {
 	   printf("packet too big\n");
 	   return -1;
 	}
-
 	if (pbuff->length <= 0) {
 	   printf("packet too small\n");
 	   return -1;
@@ -239,7 +237,7 @@ int linkSend(LinkInfo * link, packetBuffer * pbuff) {
 	}
 
 	/* Used for DEBUG -- trace packets being sent */
-	printf("** link.c/linkSend: Link %d transmitted from src=%d to dest=%d\n",
+	LOG_PRINT("** link.c/linkSend: Link %d transmitted from src=%d to dest=%d\n",
 			link->linkID, link->uniPipeInfo.src_physId, link->uniPipeInfo.dest_physId);
 }
 
