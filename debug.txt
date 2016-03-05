@@ -157,6 +157,8 @@ for switching nodes.
 					    ***** NOTE: still don't know why the table looks the way it does at the end (see log file).
 					    This may be the reason that host are never actually seeing the packets that switch is 
 					    sending out.
+					    
+				    *** TODO: run test again with added logging statements and walk thru resulting log
 	
 	
 	

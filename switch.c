@@ -81,10 +81,12 @@ void switchMain(switchState * sstate) {
     packetBuffer outPacket; // packet to be sent
     while(1) {
     	// scan incoming links for packets
+    	PRINT_LOG("** switch.c/switchMain: scanning incoming links for packets\n");
 		switchStoreIncomingPackets(sstate);
 
         // If queue not empty, send next packet
         if(sstate->packetQueue.size != 0) {
+        	LOG_PRINT("** switch.c/switchMain: sending next outgoing packet\n");
             // Get packet from head of PacketQueue
             outPacket = queuePop(&(sstate->packetQueue));
 
@@ -104,26 +106,28 @@ void switchMain(switchState * sstate) {
 }
 
 void switchStoreIncomingPackets(switchState* sstate) {
-	int i;
+	LOG_PRINT("** switch.c/switchStoreIncomingPackets: entered\n");
+	int link_index;
 	packetBuffer tmpPacket;
 	// Check all incoming links for arriving packets
-	for (i = 0; i < sstate->numInLinks; i++) {
+	for (link_index = 0; link_index < sstate->numInLinks; link_index++) {
 		// Check link for packets
-		linkReceive(&(sstate->inLinks[i]), &tmpPacket);
+		linkReceive(&(sstate->inLinks[link_index]), &tmpPacket);
 		// Put packet in PacketQueue
 		if (tmpPacket.is_valid == 1) {
 			LOG_PRINT("** switch.c/switchStorIncomingPackets: pushing packet bound for dest=%d in queue\n", tmpPacket.dest_addr);
 			queuePush(&(sstate->packetQueue), tmpPacket);
 
-			// Update ForwardingTable
+			// Update ForwardingTable to include host that switch received a packet from
 			tableUpdate(&(sstate->forwardingTable),
-					tmpPacket.is_valid, tmpPacket.src_addr, i);
+					tmpPacket.is_valid, tmpPacket.src_addr, link_index);
 			tableDisplay(&(sstate->forwardingTable));
 		}
 	}
 }
 
 void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate) {
+	LOG_PRINT("** switch.c/switchSendOutPacket: entered\n");
 	// If outgoing link from ForwardingTable actually exists
 	if (outLink != -1) {
 		// Send packet along the outgoing link
@@ -215,16 +219,25 @@ void queueDisplay(PacketQueue * pqueue) {
 // Update the table
 void tableUpdate(ForwardingTable * ftable, int valid,
 				 int dest_addr, int linkOut) {
+	LOG_PRINT("** switch.c/tableUpdate: entered\n");
     int table_index;
 
+    // check if destination addr already in table
     table_index = tableEntryIndex(ftable, dest_addr);
 
     // if index not yet in table
-    if(table_index == -1)
+    if(table_index == -1) {
         tableAddEntry(ftable, valid, dest_addr, linkOut);
-    // else modify the entry with the specified dest_addr
-    else
+        LOG_PRINT("** switch.c/tableUpdate: adding entry: valid=%d, dest_addr=%d, linkOut=%d\n",
+        		valid, dest_addr, linkOut);
+    }
+    // else update the entry having the specified dest_addr
+    else {
     	tableUpdateEntry(ftable, table_index, valid, linkOut);
+    	LOG_PRINT("** switch.c/tableUpdate: updating entry at dest_addr=%d: valid=%d, linkOut=%d\n",
+    	        		dest_addr, valid, linkOut);
+    }
+    tableDisplay(ftable);
 }
 
 void tableAddEntry(ForwardingTable * ftable, int valid,
@@ -233,7 +246,7 @@ void tableAddEntry(ForwardingTable * ftable, int valid,
 
     entry.valid = valid;
     entry.dest_addr = dest_addr;
-    entry.linkOut = linkOut;
+    entry.linkOutNum = linkOut;
 
     ftable->entries[ftable->size] = entry;
     ftable->size++;
@@ -243,37 +256,37 @@ void tableAddEntry(ForwardingTable * ftable, int valid,
 void tableUpdateEntry(ForwardingTable * ftable, int table_index,
 					  int valid, int linkOut) {
     ftable->entries[table_index].valid = valid;
-    ftable->entries[table_index].linkOut = linkOut;
+    ftable->entries[table_index].linkOutNum = linkOut;
 }
 
 
 
-// Retrieve the value of the out link for the given dest_addr of an outgoing packet in the table
+// Retrieve the outLink number for the given destination addr of an outgoing packet in the table
 int tableGetOutLink(ForwardingTable * ftable, int dest_addr) {
     int table_index;
-    int linkOut;
+    int outLinkNum;
 
-    // find index in table with the given addr
+    // find index in table with the given dest_addr
     table_index = tableEntryIndex(ftable, dest_addr);
-    LOG_PRINT("** switch.c/tableGetOutLink: table_index=%d for dest_addr=%d\n", table_index, dest_addr);
+    LOG_PRINT("** switch.c/tableGetOutLink: table_index=%d found for dest_addr=%d\n", table_index, dest_addr);
 
     if(table_index == -1)
         return table_index;
     else {
-    	// if entry with given addr was found, return entry's linkOut number
-        linkOut = ftable->entries[table_index].linkOut;
-        return linkOut;
+    	// if entry with given dest_addr was found, return entry's linkOut number
+        outLinkNum = ftable->entries[table_index].linkOutNum;
+        return outLinkNum;
     }
 }
 
-// Find the index of an entry in the table with the given addr
+// Find the index of an entry in the table with the given destination addr
 int tableEntryIndex(ForwardingTable * ftable, int dest_addr) {
     int i;
     for(i=0; i < ftable->size; i++) {
         if(ftable->entries[i].dest_addr == dest_addr)
             return i;
     }
-    // if entry w/ given addr not found
+    // if entry w/ given addr not found return some sentinel value
     return -1;
 }
 
@@ -289,6 +302,6 @@ void tableDisplay(ForwardingTable * ftable) {
         LOG_PRINT("%d\t\t%d\t\t\t\t\t%d\n",
         		ftable->entries[i].valid,
 				ftable->entries[i].dest_addr,
-				ftable->entries[i].linkOut);
+				ftable->entries[i].linkOutNum);
     }
 }

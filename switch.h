@@ -25,7 +25,7 @@ typedef struct {
 typedef struct {
     int valid;
     int dest_addr;
-    int linkOut;
+    int linkOutNum;
 } TableEntry;
 
 typedef struct{
