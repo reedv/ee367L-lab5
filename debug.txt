@@ -138,6 +138,10 @@ for switching nodes.
 		   	testmsg1
 		   	t
 		   	2
+		   	c
+		   	2
+		   	r
+		   	testFrom1to2
 		   	
 		   	then see if message successfully transmitted to TestDir2
 

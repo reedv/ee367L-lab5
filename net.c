@@ -237,3 +237,15 @@ void netCloseManConnections(manLinkArrayType * manLinkArray)
 }
 
 
+void netCloseAllManConnections(manLinkArrayType * manLinkArray) {
+	int i;
+	for (i=0; i < manLinkArray->numlinks; i++) {
+	   close(manLinkArray->links[i].toHost[PIPE_READ]);
+	   close(manLinkArray->links[i].toHost[PIPE_WRITE]);
+
+	   close(manLinkArray->links[i].fromHost[PIPE_READ]);
+	   close(manLinkArray->links[i].fromHost[PIPE_WRITE]);
+	}
+}
+
+

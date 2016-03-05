@@ -64,6 +64,7 @@ void tableDisplay(ForwardingTable * ftable);
 
 
 void switchInit(switchState * sstate, int physid);
+void switchSetupLinks(switchState * sstate, linkArrayType * links_array);
 void switchMain(switchState * sstate);
 void switchStoreIncomingPackets(switchState* sstate);
 void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate);

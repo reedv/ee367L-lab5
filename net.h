@@ -33,3 +33,5 @@ void netCloseLinks(linkArrayType * linkArray);
 /* Close the host's side of a connection between a host and manager */
 void netCloseManConnections(manLinkArrayType * manLinkArray);
 
+void netCloseAllManConnections(manLinkArrayType * manLinkArray);
+

@@ -37,6 +37,43 @@ void queueInit(PacketQueue * pqueue) {
     pqueue->tail = -1;
 }
 
+// store expected links in switch's outLinks and inLinks
+void switchSetupLinks(switchState * sstate, linkArrayType * links_array) {
+	int i,
+	    k;
+
+	// find all links in links_array that belong in switch's inLinks array
+		for (i=0, k=0; i < links_array->numlinks; i++) {
+		   // if link in link_array has dest matching switch's physid, add that link to switch's inLinks
+		   int isLinkToSwitchId = links_array->link[i].uniPipeInfo.dest_physId == sstate->physid;
+		   if (isLinkToSwitchId) {
+			   printf("** switch.c/switchSetupLinks get inLinks: adding link with src_physid = %d and dest_physid = %d to inLinks\n",
+					   links_array->link[i].uniPipeInfo.src_physId,
+					   links_array->link[i].uniPipeInfo.dest_physId);
+			   sstate->inLinks[k] = links_array->link[i];
+
+			   sstate->numInLinks++;
+			   k++;
+		   }
+		}
+
+	// find all links in links_array that belong in switch's outLinks array
+	for (i=0, k=0; i < links_array->numlinks; i++) {
+	   // if link in has src matching switch's physid, add that link to switch's outLinks
+	   int isLinkFromSwitchId = links_array->link[i].uniPipeInfo.src_physId == sstate->physid;
+	   if (isLinkFromSwitchId) {
+		   printf("** switch.c/switchSetupLinks get outLinks: adding link with src_physid = %d and dest_physid = %d to outLinks\n",
+				   links_array->link[i].uniPipeInfo.src_physId,
+				   links_array->link[i].uniPipeInfo.dest_physId);
+		   sstate->outLinks[k] = links_array->link[i];
+
+		   sstate->numOutLinks++;
+		   k++;
+	   }
+	}
+
+}
+
 
 
 void switchMain(switchState * sstate)
@@ -69,7 +106,7 @@ void switchMain(switchState * sstate)
 }
 
 void switchStoreIncomingPackets(switchState* sstate) {
-	printf("\n** switch.c/switchStoreIncomingPackets\n");
+	//printf("\n** switch.c/switchStoreIncomingPackets\n");
 	int inLink_index;
 	packetBuffer tmpPacket;
 	// Check all incoming links for arriving packets
@@ -77,15 +114,17 @@ void switchStoreIncomingPackets(switchState* sstate) {
 		// Check link for packets
 		linkReceive(&(sstate->inLinks[inLink_index]), &tmpPacket);
 		// Put packet in PacketQueue
-		queuePush(&(sstate->packetQueue), tmpPacket);
-		// Update ForwardingTable
-		tableUpdate(&(sstate->forwardingTable),
-				tmpPacket.is_valid, tmpPacket.src_addr, inLink_index);
+		if (tmpPacket.is_valid == 1) {
+			queuePush(&(sstate->packetQueue), tmpPacket);
+			// Update ForwardingTable
+			tableUpdate(&(sstate->forwardingTable),
+					tmpPacket.is_valid, tmpPacket.src_addr, inLink_index);
+		}
 	}
 }
 
 void switchSendOutPacket(packetBuffer outPacket, int outLink, switchState* sstate) {
-	printf("\n** switch.c/switchSendOutPacket\n");
+	//printf("\n** switch.c/switchSendOutPacket\n");
 	// If outgoing link from ForwardingTable exists
 	if (outLink != -1) {
 		// Send packet along the outgoing link

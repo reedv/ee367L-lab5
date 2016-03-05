@@ -111,40 +111,9 @@ int main()
 			   // inti. switch's state
 			   switchInit(&switch_state, physid);
 
-			   printf("** main.c creating switch process: init. switch numLinks\n");
-			   // inti. number of switch's incident communication links
-
 			   printf("** main.c creating switch process: init. switch links\n");
-			   int i,
-			   	   k;
-			   // find all links in links_array that belong in switch's outLinks array
-			   for (i=0, k=0; i < links_array.numlinks; i++) {
-			   	   // if link in has src matching switch's physid, add that link to switch's outLinks
-				   int isLinkFromSwitchId = links_array.link[i].uniPipeInfo.src_physId == physid;
-			   	   if (isLinkFromSwitchId) {
-			   		   printf("** main.c switch get outLinks: adding link with src_physid = %d and dest_physid = %d to outLinks\n",
-			   				   links_array.link[i].uniPipeInfo.src_physId,
-							   links_array.link[i].uniPipeInfo.dest_physId);
-			   		   switch_state.outLinks[k] = links_array.link[i];
-
-			   		   k++;
-			   		   switch_state.numOutLinks++;
-			   	   }
-			   	}
-			   // find all links in links_array that belong in switch's inLinks array
-			   for (i=0, k=0; i < links_array.numlinks; i++) {
-				   // if link in link_array has dest matching switch's physid, add that link to switch's inLinks
-				   int isLinkToSwitchId = links_array.link[i].uniPipeInfo.dest_physId == physid;
-				   if (isLinkToSwitchId) {
-					   printf("** main.c switch get outLinks: adding link with src_physid = %d and dest_physid = %d to inLinks\n",
-							   links_array.link[i].uniPipeInfo.src_physId,
-							   links_array.link[i].uniPipeInfo.dest_physId);
-					   switch_state.inLinks[k] = links_array.link[i];
-
-					   k++;
-					   switch_state.numInLinks++;
-				   }
-				}
+			   // setup switch's incoming and outgoing links
+			   switchSetupLinks(&switch_state, &links_array);
 
 			   printf("** main.c creating switch process: closing nonincident links\n");
 			   // close links not incident to the switch
@@ -152,14 +121,7 @@ int main()
 
 			   printf("** main.c creating switch process: closing manager links\n");
 			   // close manger links, since switches never connect to them
-			   int manLink;
-			   for (manLink=0; manLink < manager_links_array.numlinks; manLink++) {
-				   close(manager_links_array.links[manLink].toHost[0]);
-				   close(manager_links_array.links[manLink].toHost[1]);
-
-				   close(manager_links_array.links[manLink].fromHost[0]);
-				   close(manager_links_array.links[manLink].fromHost[1]);
-			   }
+			   netCloseAllManConnections(&manager_links_array);
 
 			   printf("** main.c creating switch process: starting switchMain loop\n");
 			   // go to main loop of switch node
