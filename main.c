@@ -15,6 +15,7 @@
 #include "host.h"
 #include "switch.h"
 #include "net.h"
+#include "logger.h"
 
 #define EMPTY_ADDR  0xffff  /* Indicates the empty address */
                              /* It also indicates that the broadcast address */
@@ -53,11 +54,11 @@ int main()
 	int physid; 		/* Physical ID of host */
 	// init. each host
 	for (physid = 0; physid < NUMHOSTS+NUMSWITCHES; physid++) {
-	   printf("** physid = %d \n", physid);
+	   LOG_PRINT("** physid = %d \n", physid);
 	   process_id = fork();
 
 	   if (process_id == -1) {
-		  printf("Error: the fork() failed\n");
+		  LOG_PRINT("Error: the fork() failed\n");
 		  return 0;
 	   }
 	   else if (process_id == 0) {
@@ -66,7 +67,7 @@ int main()
 
 		   // init. all hosts
 		   if (physid < NUMHOSTS) {
-			   printf("** main.c creating host process: physid = %d\n", physid);
+			   LOG_PRINT("** main.c creating host process: physid = %d\n", physid);
 
 			  /* Initialize host's state */
 			  hostInit(&host_state, physid);
@@ -87,14 +88,14 @@ int main()
 			  // set host's link_out from linkArrayType
 			  k = netHostOutLink(&links_array, physid); /* Host's OUTGOING link (if any) */
 			  host_state.link_out = links_array.link[k];
-			  printf("** main.c host%d: link_out dest_physid = %d\n",
+			  LOG_PRINT("** main.c host%d: link_out dest_physid = %d\n",
 					  physid, host_state.link_out.uniPipeInfo.dest_physId);
 			  // set host's link_in from linkArrayType
 			  k = netHostInLink(&links_array, physid); /* Host's INCOMING link (if any) */
 			  host_state.link_in = links_array.link[k];
-			  printf("** main.c host%d: link_in src_physid = %d\n",
+			  LOG_PRINT("** main.c host%d: link_in src_physid = %d\n",
 					  physid, host_state.link_out.uniPipeInfo.src_physId);
-			  printf("\n\n");
+			  LOG_PRINT("\n\n");
 
 			  /* Close all other links -- not incident to the host */
 			  netCloseNonincidentLinks(&links_array, physid);
@@ -106,24 +107,24 @@ int main()
 		   }
 		   // init. all switches: CURRENTLY HARDCODED TO SETUP A SINGLE SWITCH WITH 3 BI-CONNECTIONS
 		   else {
-			   printf("** main.c creating switch process: physid = %d\n", physid);
+			   LOG_PRINT("** main.c creating switch process: physid = %d\n", physid);
 
 			   // inti. switch's state
 			   switchInit(&switch_state, physid);
 
-			   printf("** main.c creating switch process: init. switch links\n");
+			   LOG_PRINT("** main.c creating switch process: init. switch links\n");
 			   // setup switch's incoming and outgoing links
 			   switchSetupLinks(&switch_state, &links_array);
 
-			   printf("** main.c creating switch process: closing nonincident links\n");
+			   LOG_PRINT("** main.c creating switch process: closing nonincidental links\n");
 			   // close links not incident to the switch
 			   netCloseNonincidentLinks(&links_array, physid);
 
-			   printf("** main.c creating switch process: closing manager links\n");
+			   LOG_PRINT("** main.c creating switch process: closing manager links\n");
 			   // close manger links, since switches never connect to them
 			   netCloseAllManConnections(&manager_links_array);
 
-			   printf("** main.c creating switch process: starting switchMain loop\n");
+			   LOG_PRINT("** main.c creating switch process: starting switchMain loop\n");
 			   // go to main loop of switch node
 			   switchMain(&switch_state);
 		   }

@@ -111,6 +111,17 @@ for switching nodes.
    			to transmit packages between hosts.
    				*** TODO: add tracing statements along execution of transmitting a packet from one host to another
    				to see where program is stopping.
+   					**** RESOLVED?: problems seems to have gone away. Either that, or I've just been staring at the 
+   					terminal after pressing the command because prtinf debug statements woudl show up and I never actually 
+   					tried entering any other commands after that (expecting the menu to pop up again when I could have
+   					entered commands to the manager the whole time and just never tried).
+   					
+			** BUG: Seem to be able to successfully transmit packets from switch to another specified host, but
+			unable to transmit from switch to ALL other connected hosts.
+			** ALSO: Whether sending to a specified host or to some invalid host (in an attempt to get switch to
+			send to ALL hosts), the link.c/linkSend printf trace statement appears to send to all host regardless
+			even though the host don't appear to actually be getting anything in the case of trying to send to all.
+				*** TRY:
 	
 	
 	

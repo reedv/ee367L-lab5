@@ -50,6 +50,7 @@
 #include "utilities.h"
 #include "main.h"
 #include "link.h"
+#include "logger.h"
 
 #define PIPE_READ  0
 #define PIPE_WRITE 1
@@ -149,6 +150,7 @@ int linkReceive(LinkInfo * link, packetBuffer * pbuff)
 			 highbits = highbits * 16; /* Shift to the left by 4 bits */
 			 pbuff->payload[k] = highbits + lowbits;
 		  } /* end of for */
+
 		  pbuff->payload[k] = '\0';
 		  pbuff->is_valid=1;
 		  pbuff->new=1;
@@ -237,16 +239,17 @@ int linkSend(LinkInfo * link, packetBuffer * pbuff) {
 	}
 
 	/* Used for DEBUG -- trace packets being sent */
-	printf("Link %d transmitted\n",link->linkID);
+	printf("** link.c/linkSend: Link %d transmitted from src=%d to dest=%d\n",
+			link->linkID, link->uniPipeInfo.src_physId, link->uniPipeInfo.dest_physId);
 }
 
 void linkDisplay(linkArrayType * link_array) {
-	printf("** link.c/linkDisplay\n");
+	LOG_PRINT("** link.c/linkDisplay\n");
 	int i;
 	for(i=0; i < link_array->numlinks; i++) {
-		printf("** link #: %d\n", i);
-		printf("** src_physId: %d\n", link_array->link[i].uniPipeInfo.src_physId);
-		printf("** dest_physId: %d\n", link_array->link[i].uniPipeInfo.dest_physId);
+		LOG_PRINT("** link #: %d\n", i);
+		LOG_PRINT("** src_physId: %d\n", link_array->link[i].uniPipeInfo.src_physId);
+		LOG_PRINT("** dest_physId: %d\n", link_array->link[i].uniPipeInfo.dest_physId);
 	}
 	printf("\n\n");
 }

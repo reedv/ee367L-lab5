@@ -11,6 +11,7 @@
 #include "main.h"
 #include "link.h"
 #include "switch.h"
+#include "logger.h"
 
 #define MAXBUFFER 1000
 #define TENMILLISEC 10000
@@ -18,7 +19,7 @@
 
 
 void switchInit(switchState * sstate, int physid) {
-	printf("** switch.c/switchInit: entered\n");
+	LOG_PRINT("** switch.c/switchInit: entered\n");
     sstate->physid = physid;
     sstate->numInLinks = 0;
     sstate->numOutLinks = 0;
@@ -47,7 +48,7 @@ void switchSetupLinks(switchState * sstate, linkArrayType * links_array) {
 		   // if link in link_array has dest matching switch's physid, add that link to switch's inLinks
 		   int isLinkToSwitchId = links_array->link[i].uniPipeInfo.dest_physId == sstate->physid;
 		   if (isLinkToSwitchId) {
-			   printf("** switch.c/switchSetupLinks get inLinks: adding link with src_physid = %d and dest_physid = %d to inLinks\n",
+			   LOG_PRINT("** switch.c/switchSetupLinks get inLinks: adding link with src_physid = %d and dest_physid = %d to inLinks\n",
 					   links_array->link[i].uniPipeInfo.src_physId,
 					   links_array->link[i].uniPipeInfo.dest_physId);
 			   sstate->inLinks[k] = links_array->link[i];
@@ -62,7 +63,7 @@ void switchSetupLinks(switchState * sstate, linkArrayType * links_array) {
 	   // if link in has src matching switch's physid, add that link to switch's outLinks
 	   int isLinkFromSwitchId = links_array->link[i].uniPipeInfo.src_physId == sstate->physid;
 	   if (isLinkFromSwitchId) {
-		   printf("** switch.c/switchSetupLinks get outLinks: adding link with src_physid = %d and dest_physid = %d to outLinks\n",
+		   LOG_PRINT("** switch.c/switchSetupLinks get outLinks: adding link with src_physid = %d and dest_physid = %d to outLinks\n",
 				   links_array->link[i].uniPipeInfo.src_physId,
 				   links_array->link[i].uniPipeInfo.dest_physId);
 		   sstate->outLinks[k] = links_array->link[i];
@@ -78,7 +79,7 @@ void switchSetupLinks(switchState * sstate, linkArrayType * links_array) {
 
 void switchMain(switchState * sstate)
 {
-	printf("** switch.c/switchMain: entered\n");
+	LOG_PRINT("** switch.c/switchMain: entered\n");
     int outLink;            // Link to transmit packet on
     packetBuffer outPacket; // packet to be sent
     while(1) {

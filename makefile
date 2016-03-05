@@ -1,7 +1,7 @@
 # Make file
 
-net367: host.o utilities.o link.o man.o main.o net.o switch.o
-	gcc -o net367 host.o utilities.o link.o man.o main.o net.o switch.o
+net367: host.o utilities.o link.o man.o main.o net.o switch.o logger.o
+	gcc -o net367 host.o utilities.o link.o man.o main.o net.o switch.o logger.o
 
 main.o: main.c
 	gcc -c main.c
@@ -23,5 +23,8 @@ link.o:  link.c
 	
 switch.o: switch.c
 	gcc -c switch.c
+	
+logger.o: switch.c
+	gcc -c logger.c
 
 
