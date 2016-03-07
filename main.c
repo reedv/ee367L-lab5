@@ -37,12 +37,12 @@ int main()
 
 	/* Create links to connect nodes but not actually setting their incident nodes */
 	linkArrayType links_array;
-	links_array.numlinks = NUMLINKS;
+	links_array.numlinks = NUMLINKS;  // TODO: need way to dynamically set numlinks from a file
 	// for expected number of links, populate linkArrayType with links
 	netCreateLinks(& links_array);
 
-	/* Set the end nodes of the links
-	 * TODO: Change to have 3 hosts connected to a switch and a manager connected to a host*/
+	/* Set the expected end nodes of the links */
+	// TODO: need to set a srcid_array and destid_array before this point (see net.c/netSetNetworkTopology)
 	netSetNetworkTopology(& links_array);
 	linkDisplay(& links_array);
 	usleep(10000);  // to give time to fully print list before spawning processes
@@ -53,6 +53,7 @@ int main()
 	pid_t process_id;  		/* Process id */
 	int physid; 		/* Physical ID of host */
 	// init. each host
+	// TODO: need way to dynamically set numhosts+numswitches before this loop
 	for (physid = 0; physid < NUMHOSTS+NUMSWITCHES; physid++) {
 	   LOG_PRINT("** main.c process-spawning loop physid = %d \n", physid);
 	   process_id = fork();

@@ -152,11 +152,18 @@ void netSetNetworkTopology(linkArrayType * linkArray)
 	linkArray->link[5].uniPipeInfo.src_physId = 3;   // link5 comes from switch3
 	linkArray->link[5].uniPipeInfo.dest_physId = 2;  //       goes to host2
 
-	// uncomment for testing: CONNECTS 2 HOST TOGETHER, SO NEED TO CHANGE man.h/NUMHOSTS AND link.h/NUMLINKS
-//	linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
-//	linkArray->link[0].uniPipeInfo.dest_physId = 1;  //       goes to host1
-//	linkArray->link[1].uniPipeInfo.src_physId = 1;   // link1 comes from host1
-//	linkArray->link[1].uniPipeInfo.dest_physId = 0;  //       goes to host0
+	// take linkarray, srcarray, destarray
+	// for each link i=0 < linkarray->numlinks and k=0
+	// 		set link[i]'s src_id = srcarray[k]
+	//		set link[i]'s dest_id = destarray[k]
+	// 		set link[i+1]'s src_id = destarray[k]
+	//		set link[i+1]'s dest_id = srcarray[k]
+	//		i += 2
+	//		k++
+	//
+	// where srcarray is array of src_physIds for each link from link0 to linkN
+	//       destarray is array of dest_physIds for each link from link0 to linkN
+
 }
 
 /*
