@@ -1,117 +1,117 @@
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: received topology file named testNetwork.dat
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: received topology file named testNetwork.dat
  [main.c][line: 182] 
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: topology file named testNetwork.dat NOT NULL
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: topology file named testNetwork.dat NOT NULL
  [main.c][line: 196] 
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: numhosts=3, numswitches=1, numlinks=6
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: numhosts=3, numswitches=1, numlinks=6
  [main.c][line: 211] 
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: src_ids[0]=0
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: src_ids[0]=0
  [main.c][line: 218] 
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: dest_ids[0]=3
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: dest_ids[0]=3
  [main.c][line: 222] 
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: src_ids[1]=1
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: src_ids[1]=1
  [main.c][line: 218] 
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: dest_ids[1]=3
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: dest_ids[1]=3
  [main.c][line: 222] 
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: src_ids[2]=3
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: src_ids[2]=3
  [main.c][line: 218] 
-Mon Mar  7 19:18:23 2016 ** mainSetTopology: dest_ids[2]=2
+Mon Mar  7 19:27:31 2016 ** mainSetTopology: dest_ids[2]=2
  [main.c][line: 222] 
-Mon Mar  7 19:18:23 2016 ** link.c/linkDisplay
+Mon Mar  7 19:27:31 2016 ** link.c/linkDisplay
  [link.c][line: 247] 
-Mon Mar  7 19:18:23 2016 ** link #: 0
+Mon Mar  7 19:27:31 2016 ** link #: 0
  [link.c][line: 250] 
-Mon Mar  7 19:18:23 2016 ** src_physId: 0
+Mon Mar  7 19:27:31 2016 ** src_physId: 0
  [link.c][line: 251] 
-Mon Mar  7 19:18:23 2016 ** dest_physId: 3
+Mon Mar  7 19:27:31 2016 ** dest_physId: 3
  [link.c][line: 252] 
-Mon Mar  7 19:18:23 2016 ** link #: 1
+Mon Mar  7 19:27:31 2016 ** link #: 1
  [link.c][line: 250] 
-Mon Mar  7 19:18:23 2016 ** src_physId: 3
+Mon Mar  7 19:27:31 2016 ** src_physId: 3
  [link.c][line: 251] 
-Mon Mar  7 19:18:23 2016 ** dest_physId: 0
+Mon Mar  7 19:27:31 2016 ** dest_physId: 0
  [link.c][line: 252] 
-Mon Mar  7 19:18:23 2016 ** link #: 2
+Mon Mar  7 19:27:31 2016 ** link #: 2
  [link.c][line: 250] 
-Mon Mar  7 19:18:23 2016 ** src_physId: 1
+Mon Mar  7 19:27:31 2016 ** src_physId: 1
  [link.c][line: 251] 
-Mon Mar  7 19:18:23 2016 ** dest_physId: 3
+Mon Mar  7 19:27:31 2016 ** dest_physId: 3
  [link.c][line: 252] 
-Mon Mar  7 19:18:23 2016 ** link #: 3
+Mon Mar  7 19:27:31 2016 ** link #: 3
  [link.c][line: 250] 
-Mon Mar  7 19:18:23 2016 ** src_physId: 3
+Mon Mar  7 19:27:31 2016 ** src_physId: 3
  [link.c][line: 251] 
-Mon Mar  7 19:18:23 2016 ** dest_physId: 1
+Mon Mar  7 19:27:31 2016 ** dest_physId: 1
  [link.c][line: 252] 
-Mon Mar  7 19:18:23 2016 ** link #: 4
+Mon Mar  7 19:27:31 2016 ** link #: 4
  [link.c][line: 250] 
-Mon Mar  7 19:18:23 2016 ** src_physId: 3
+Mon Mar  7 19:27:31 2016 ** src_physId: 3
  [link.c][line: 251] 
-Mon Mar  7 19:18:23 2016 ** dest_physId: 2
+Mon Mar  7 19:27:31 2016 ** dest_physId: 2
  [link.c][line: 252] 
-Mon Mar  7 19:18:23 2016 ** link #: 5
+Mon Mar  7 19:27:31 2016 ** link #: 5
  [link.c][line: 250] 
-Mon Mar  7 19:18:23 2016 ** src_physId: 2
+Mon Mar  7 19:27:31 2016 ** src_physId: 2
  [link.c][line: 251] 
-Mon Mar  7 19:18:23 2016 ** dest_physId: 3
+Mon Mar  7 19:27:31 2016 ** dest_physId: 3
  [link.c][line: 252] 
-Mon Mar  7 19:18:23 2016 ** main.c process-spawning loop physid = 0 
+Mon Mar  7 19:27:31 2016 ** main.c process-spawning loop physid = 0 
  [main.c][line: 68] 
-Mon Mar  7 19:18:23 2016 ** main.c process-spawning loop physid = 1 
+Mon Mar  7 19:27:31 2016 ** main.c process-spawning loop physid = 1 
  [main.c][line: 68] 
-Mon Mar  7 19:18:23 2016 ** main.c creating host process: physid = 0
+Mon Mar  7 19:27:31 2016 ** main.c creating host process: physid = 0
  [main.c][line: 81] 
-Mon Mar  7 19:18:23 2016 ** main.c process-spawning loop physid = 2 
+Mon Mar  7 19:27:31 2016 ** main.c process-spawning loop physid = 2 
  [main.c][line: 68] 
-Mon Mar  7 19:18:23 2016 ** main.c creating host process: physid = 1
+Mon Mar  7 19:27:31 2016 ** main.c creating host process: physid = 1
  [main.c][line: 81] 
-Mon Mar  7 19:18:23 2016 ** main.c host0: link_out dest_physid = 3
+Mon Mar  7 19:27:31 2016 ** main.c host0: link_out dest_physid = 3
  [main.c][line: 103] 
-Mon Mar  7 19:18:23 2016 ** main.c process-spawning loop physid = 3 
+Mon Mar  7 19:27:31 2016 ** main.c process-spawning loop physid = 3 
  [main.c][line: 68] 
-Mon Mar  7 19:18:23 2016 ** main.c creating host process: physid = 2
+Mon Mar  7 19:27:31 2016 ** main.c creating host process: physid = 2
  [main.c][line: 81] 
-Mon Mar  7 19:18:23 2016 ** main.c host0: link_in src_physid = 0
+Mon Mar  7 19:27:31 2016 ** main.c host0: link_in src_physid = 0
  [main.c][line: 108] 
-Mon Mar  7 19:18:23 2016 ** main.c host1: link_out dest_physid = 3
+Mon Mar  7 19:27:31 2016 ** main.c host1: link_out dest_physid = 3
  [main.c][line: 103] 
-Mon Mar  7 19:18:23 2016 
-
- [main.c][line: 109] 
-Mon Mar  7 19:18:23 2016 ** main.c host2: link_out dest_physid = 3
- [main.c][line: 103] 
-Mon Mar  7 19:18:23 2016 ** main.c creating switch process: physid = 3
+Mon Mar  7 19:27:31 2016 ** main.c creating switch process: physid = 3
  [main.c][line: 121] 
-Mon Mar  7 19:18:23 2016 ** main.c host1: link_in src_physid = 1
+Mon Mar  7 19:27:31 2016 
+
+ [main.c][line: 109] 
+Mon Mar  7 19:27:31 2016 ** main.c host2: link_out dest_physid = 3
+ [main.c][line: 103] 
+Mon Mar  7 19:27:31 2016 ** main.c host1: link_in src_physid = 1
  [main.c][line: 108] 
-Mon Mar  7 19:18:23 2016 ** switch.c/switchInit: entered
+Mon Mar  7 19:27:31 2016 ** switch.c/switchInit: entered
  [switch.c][line: 22] 
-Mon Mar  7 19:18:23 2016 
-
- [main.c][line: 109] 
-Mon Mar  7 19:18:23 2016 ** main.c host2: link_in src_physid = 2
+Mon Mar  7 19:27:31 2016 ** main.c host2: link_in src_physid = 2
  [main.c][line: 108] 
-Mon Mar  7 19:18:23 2016 ** main.c creating switch process: init. switch links
- [main.c][line: 126] 
-Mon Mar  7 19:18:23 2016 
+Mon Mar  7 19:27:31 2016 
 
  [main.c][line: 109] 
-Mon Mar  7 19:18:23 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 0 and dest_physid = 3 to inLinks[0]
+Mon Mar  7 19:27:31 2016 ** main.c creating switch process: init. switch links
+ [main.c][line: 126] 
+Mon Mar  7 19:27:31 2016 
+
+ [main.c][line: 109] 
+Mon Mar  7 19:27:31 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 0 and dest_physid = 3 to inLinks[0]
  [switch.c][line: 54] 
-Mon Mar  7 19:18:23 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 1 and dest_physid = 3 to inLinks[1]
+Mon Mar  7 19:27:31 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 1 and dest_physid = 3 to inLinks[1]
  [switch.c][line: 54] 
-Mon Mar  7 19:18:23 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 2 and dest_physid = 3 to inLinks[2]
+Mon Mar  7 19:27:31 2016 ** switch.c/switchSetupLinks get inLinks: adding link with src_physid = 2 and dest_physid = 3 to inLinks[2]
  [switch.c][line: 54] 
-Mon Mar  7 19:18:23 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 0 to outLinks[0]
+Mon Mar  7 19:27:31 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 0 to outLinks[0]
  [switch.c][line: 69] 
-Mon Mar  7 19:18:23 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 1 to outLinks[1]
+Mon Mar  7 19:27:31 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 1 to outLinks[1]
  [switch.c][line: 69] 
-Mon Mar  7 19:18:23 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 2 to outLinks[2]
+Mon Mar  7 19:27:31 2016 ** switch.c/switchSetupLinks get outLinks: adding link with src_physid = 3 and dest_physid = 2 to outLinks[2]
  [switch.c][line: 69] 
-Mon Mar  7 19:18:23 2016 ** main.c creating switch process: closing nonincidental links
+Mon Mar  7 19:27:31 2016 ** main.c creating switch process: closing nonincidental links
  [main.c][line: 130] 
-Mon Mar  7 19:18:23 2016 ** main.c creating switch process: closing manager links
+Mon Mar  7 19:27:31 2016 ** main.c creating switch process: closing manager links
  [main.c][line: 134] 
-Mon Mar  7 19:18:23 2016 ** main.c creating switch process: starting switchMain loop
+Mon Mar  7 19:27:31 2016 ** main.c creating switch process: starting switchMain loop
  [main.c][line: 138] 
-Mon Mar  7 19:18:23 2016 ** switch.c/switchMain: entered
+Mon Mar  7 19:27:31 2016 ** switch.c/switchMain: entered
  [switch.c][line: 81] 
