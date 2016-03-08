@@ -23,27 +23,38 @@
 #define PIPE_WRITE 1 
 #define PIPE_READ  0
 
-int main()
-{
+
+void mainSetTopology(int src_ids[], int dest_ids[],
+		int * numhosts, int * numswitches, int * numlinks, char * file);
+
+int main(int argc, char * argv[]) {
+	// get the src_ids and dest_ids for each link in the network
+	int src_Ids[MAX_TOPOLOGY];
+	int dest_Ids[MAX_TOPOLOGY];
+	int numhosts,
+		numswitches,
+		numlinks;
+	mainSetTopology(src_Ids, dest_Ids,		// recall arrays are passed by ref.
+			&numhosts, &numswitches, &numlinks, argv[1]);
+
 	/*
 	 * Create nonblocking (pipes) between manager and hosts
 	 * assuming that hosts have physical IDs 0, 1, ... (that is, indexed from 0)
 	 */
 	manLinkArrayType manager_links_array;
 	// set the number of hosts manager can connect to
-	manager_links_array.numlinks = NUMHOSTS;
+	manager_links_array.numlinks = numhosts;
 	// for expected number of hosts, populate the manager links array with managerLinks
 	netCreateConnections(& manager_links_array);
 
 	/* Create links to connect nodes but not actually setting their incident nodes */
 	linkArrayType links_array;
-	links_array.numlinks = NUMLINKS;  // TODO: need way to dynamically set numlinks from a file
+	links_array.numlinks = numlinks;
 	// for expected number of links, populate linkArrayType with links
 	netCreateLinks(& links_array);
 
 	/* Set the expected end nodes of the links */
-	// TODO: need to set a srcid_array and destid_array before this point (see net.c/netSetNetworkTopology)
-	netSetNetworkTopology(& links_array);
+	netSetNetworkTopology(& links_array, src_Ids, dest_Ids);
 	linkDisplay(& links_array);
 	usleep(10000);  // to give time to fully print list before spawning processes
 
@@ -53,8 +64,7 @@ int main()
 	pid_t process_id;  		/* Process id */
 	int physid; 		/* Physical ID of host */
 	// init. each host
-	// TODO: need way to dynamically set numhosts+numswitches before this loop
-	for (physid = 0; physid < NUMHOSTS+NUMSWITCHES; physid++) {
+	for (physid = 0; physid < numhosts+numswitches; physid++) {
 	   LOG_PRINT("** main.c process-spawning loop physid = %d \n", physid);
 	   process_id = fork();
 
@@ -67,7 +77,7 @@ int main()
 
 
 		   // init. all hosts
-		   if (physid < NUMHOSTS) {
+		   if (physid < numhosts) {
 			   LOG_PRINT("** main.c creating host process: physid = %d\n", physid);
 
 			  /* Initialize host's state */
@@ -165,6 +175,67 @@ int main()
 	 */
 	kill(0, SIGKILL); /* Kill all processes */
 	return 0;
+}
+
+void mainSetTopology(int src_ids[], int  dest_ids[],
+	int * numhosts, int * numswitches, int * numlinks, char file[]) {
+	LOG_PRINT("** mainSetTopology: received topology file named %s\n", file);
+	const int MAX_LINE = 100;
+	char word[MAX_LINE+1];
+	char line[MAX_LINE];
+	FILE * topology;
+
+	*numhosts = -1;
+	*numswitches = -1;
+	*numlinks = -1;
+
+	topology = fopen(file, "r");
+
+	if (topology != NULL)
+	{
+		LOG_PRINT("** mainSetTopology: topology file named %s NOT NULL\n", file);
+		// get numhosts from 1st line in file
+		fgets(line, sizeof line, topology);
+		findWord(word, line, 1);
+		*numhosts = ascii2Int(word);
+		// get numswitches from 2nd line in file
+		fgets(line, sizeof line, topology);
+		findWord(word, line, 1);
+		*numswitches = ascii2Int(word);
+		// get numlinks from 3rd line in file
+		//    multiply numlinks by 2 since each bi-link is made of 2 uni-links
+		fgets(line, sizeof line, topology);
+		findWord(word, line, 1);
+		*numlinks = 2 * ascii2Int(word);
+		LOG_PRINT("** mainSetTopology: numhosts=%d, numswitches=%d, numlinks=%d\n",
+				*numhosts, *numswitches, *numlinks);
+
+		// get the src and dest addrs for the links from the remaining lines in the file
+		int i;
+		for(i=0; fgets(line, sizeof line, topology) != NULL; i++) {
+			findWord(word, line, 1);
+			src_ids[i] = ascii2Int(word);
+			LOG_PRINT("** mainSetTopology: src_ids[%d]=%d\n", i, ascii2Int(word));
+
+			findWord(word, line, 2);
+			dest_ids[i] = ascii2Int(word);
+			LOG_PRINT("** mainSetTopology: dest_ids[%d]=%d\n", i, ascii2Int(word));
+		}
+
+		fclose(topology);
+	}
+	else {
+		LOG_PRINT("** mainSetTopology: error opening topology file named %s\n", file);
+		printf("Error opening the file");
+		exit(1);
+	}
+
+	// check validity of topology file inputs
+	if (numhosts < 0 || numswitches < 0 || numlinks < 0 ) {
+		LOG_PRINT("** mainSetTopology: error, topology file named %s has invalid values for either numhosts, numswitches, or numlinks\n", file);
+		printf("The file has invalid inputs");
+		exit(0);
+	}
 }
 
 

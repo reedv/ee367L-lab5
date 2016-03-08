@@ -1,5 +1,6 @@
 
 #define PAYLOAD_LENGTH 200 /* Maximum payload size */
+#define MAX_TOPOLOGY 100
 
 typedef struct { /* Packet buffer */
    int src_addr;  /* Source address */

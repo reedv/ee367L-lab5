@@ -1,4 +1,4 @@
-#define NUMHOSTS 3
+#define MAXHOSTS 100
 
 typedef struct{ /* Connection used by the manager to a host implemented as file descriptors */
    int toHost[2]; 		/* Pipe link to host */
@@ -7,7 +7,7 @@ typedef struct{ /* Connection used by the manager to a host implemented as file 
 
 typedef struct {
    int numlinks;
-   managerLink links[NUMHOSTS];  /* array of links to host that manager can access*/
+   managerLink links[MAXHOSTS];  /* array of links to host that manager can access*/
 } manLinkArrayType;
 
 /* 

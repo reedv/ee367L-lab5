@@ -130,40 +130,41 @@ void netCloseConnections(manLinkArrayType *  manLinkArray, int hostid)
  * Sets the end nodes incident on the links in the linkArray
  * CURRENTLY SET UP FOR TESTING 3 HOSTS CONNECTED TO A SWITCH
  */
-void netSetNetworkTopology(linkArrayType * linkArray)
-{
-	linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
-	linkArray->link[0].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+void netSetNetworkTopology(linkArrayType * linkArray, int src_Ids[], int dest_Ids[]) {
+//	uncomment for testing
+//	linkArray->link[0].uniPipeInfo.src_physId = 0;   // link0 comes from host0
+//	linkArray->link[0].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+//
+//	linkArray->link[1].uniPipeInfo.src_physId = 3;   // link1 comes from switch3
+//	linkArray->link[1].uniPipeInfo.dest_physId = 0;  //       goes to host0
+//
+//
+//	linkArray->link[2].uniPipeInfo.src_physId = 1;   // link2 comes from host1
+//	linkArray->link[2].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+//
+//	linkArray->link[3].uniPipeInfo.src_physId = 3;   // link3 comes from switch3
+//	linkArray->link[3].uniPipeInfo.dest_physId = 1;  //       goes to host1
+//
+//
+//	linkArray->link[4].uniPipeInfo.src_physId = 2;   // link4 comes from host2
+//	linkArray->link[4].uniPipeInfo.dest_physId = 3;  //       goes to switch3
+//
+//	linkArray->link[5].uniPipeInfo.src_physId = 3;   // link5 comes from switch3
+//	linkArray->link[5].uniPipeInfo.dest_physId = 2;  //       goes to host2
 
-	linkArray->link[1].uniPipeInfo.src_physId = 3;   // link1 comes from switch3
-	linkArray->link[1].uniPipeInfo.dest_physId = 0;  //       goes to host0
+	// for each srcid and destid, set up links both ways
+	int i,
+	    k=0;
+	for (i=0; i < linkArray->numlinks;) {
+		linkArray->link[i].uniPipeInfo.src_physId = src_Ids[k];
+		linkArray->link[i].uniPipeInfo.dest_physId = dest_Ids[k];
 
+		linkArray->link[i+1].uniPipeInfo.src_physId = dest_Ids[k];
+		linkArray->link[i+1].uniPipeInfo.dest_physId = src_Ids[k];
 
-	linkArray->link[2].uniPipeInfo.src_physId = 1;   // link2 comes from host1
-	linkArray->link[2].uniPipeInfo.dest_physId = 3;  //       goes to switch3
-
-	linkArray->link[3].uniPipeInfo.src_physId = 3;   // link3 comes from switch3
-	linkArray->link[3].uniPipeInfo.dest_physId = 1;  //       goes to host1
-
-
-	linkArray->link[4].uniPipeInfo.src_physId = 2;   // link4 comes from host2
-	linkArray->link[4].uniPipeInfo.dest_physId = 3;  //       goes to switch3
-
-	linkArray->link[5].uniPipeInfo.src_physId = 3;   // link5 comes from switch3
-	linkArray->link[5].uniPipeInfo.dest_physId = 2;  //       goes to host2
-
-	// take linkarray, srcarray, destarray
-	// for each link i=0 < linkarray->numlinks and k=0
-	// 		set link[i]'s src_id = srcarray[k]
-	//		set link[i]'s dest_id = destarray[k]
-	// 		set link[i+1]'s src_id = destarray[k]
-	//		set link[i+1]'s dest_id = srcarray[k]
-	//		i += 2
-	//		k++
-	//
-	// where srcarray is array of src_physIds for each link from link0 to linkN
-	//       destarray is array of dest_physIds for each link from link0 to linkN
-
+		i += 2;
+		k++;
+	}
 }
 
 /*
