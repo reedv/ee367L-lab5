@@ -228,13 +228,13 @@ void hostMain(hostState * hstate)
 	   linkReceive(&(hstate->link_in), &tmpPacket);
 
 	   /*
-		* If there is a packet and
+		* check if there is a packet and
 		* if the packet's destination address is the host's network address (i.e. the packet is meant for this host)
 		* and the packet is valid
 		* and the packet is newly received
 		* then store the packet in the receive packet buffer
 		*/
-	   if (/*tmpPacket.dest_addr == hstate->netaddr &&*/  //comment this part of bool to have switch send to all hosts for unspecified addrs
+	   if (tmpPacket.dest_addr == hstate->netaddr &&  //comment this part of bool to have switch send to all hosts for unspecified addrs
 			   tmpPacket.is_valid == 1 &&
 			   tmpPacket.new == 1) {
 		  LOG_PRINT("** host.c/hostMain: packet with src_addr=%d and dest_addr=%d stored in hostid=%d buffer\n",
